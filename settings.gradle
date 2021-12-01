@@ -1,0 +1,2 @@
+rootProject.name = "KemetApp"
+include ':app'
