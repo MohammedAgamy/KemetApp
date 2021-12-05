@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">KemetApp</string>
+    <string name="your_name">Your Name</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="nationality">Nationality</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="signup">SignUp</string>
+    <string name="login">LogIn</string>
 </resources>
