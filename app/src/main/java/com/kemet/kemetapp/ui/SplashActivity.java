@@ -18,7 +18,7 @@ public class SplashActivity extends AppCompatActivity {
     Animation mStartAnim;
 
     //fireBase
-    FirebaseAuth mAuth ;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
         mLogoSplash.startAnimation(mStartAnim);
 
         //firebase
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     //methodSplash
@@ -49,26 +49,19 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                if(currentUser != null)
-                {
+                if (currentUser != null) {
                     //check user is register or no
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
-                }
-                else
-                {
+                } else {
                     //start RegisterActivity
                     startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
                     finish();
                 }
-
             }
         }, 3000);
 
     }
-
-
-
 
 
 }
