@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.SparseLongArray;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.pojo.SaveUserData;
 
 public class SplashActivity extends AppCompatActivity {
     //View in layout
@@ -49,9 +51,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
-                finish();
-               /* if (currentUser != null) {
+                SaveUserData saveUserData=new SaveUserData(SplashActivity.this);
+               if (currentUser != null && saveUserData.isLogin() ) {
                     //check user is register or no
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
@@ -59,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
                     //start RegisterActivity
                     startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
                     finish();
-                }*/
+                }
             }
         },3000);
     }

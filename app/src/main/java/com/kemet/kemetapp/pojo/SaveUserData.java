@@ -3,7 +3,6 @@ package com.kemet.kemetapp.pojo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.window.SplashScreen;
 
 import com.kemet.kemetapp.ui.SplashActivity;
 
