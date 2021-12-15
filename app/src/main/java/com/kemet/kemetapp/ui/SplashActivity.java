@@ -14,9 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.kemet.kemetapp.R;
 
 public class SplashActivity extends AppCompatActivity {
+    //View in layout
     ImageView mLogoSplash;
     Animation mStartAnim;
-
     //fireBase
     FirebaseAuth mAuth;
 
@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         //findView
         mLogoSplash = findViewById(R.id.logoSplash);
         //load anim logo
-        mStartAnim = AnimationUtils.loadAnimation(this, R.anim.logo_kemet_anim);
+        mStartAnim = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.logo_kemet_anim);
         mLogoSplash.startAnimation(mStartAnim);
 
         //firebase
@@ -49,7 +49,9 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                if (currentUser != null) {
+                startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+                finish();
+               /* if (currentUser != null) {
                     //check user is register or no
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
@@ -57,10 +59,9 @@ public class SplashActivity extends AppCompatActivity {
                     //start RegisterActivity
                     startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
                     finish();
-                }
+                }*/
             }
-        }, 3000);
-
+        },3000);
     }
 
 

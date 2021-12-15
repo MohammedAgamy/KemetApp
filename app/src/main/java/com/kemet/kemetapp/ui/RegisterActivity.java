@@ -1,5 +1,6 @@
 package com.kemet.kemetapp.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,21 +8,36 @@ import android.os.Bundle;
 
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.core.FirestoreClient;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.pojo.SaveUserData;
+
+import java.util.HashMap;
 
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     EditText mName, mEmail, mPassword;
     Button mBtnRegister;
+    LinearLayout mParent;
+    LottieAnimationView mWaiteAnim;
 
     //firebase
     FirebaseAuth mAuth;
-
+    FirebaseFirestore fireStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +51,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mName = findViewById(R.id.enterName_Register);
         mEmail = findViewById(R.id.enterEmail_Register);
         mPassword = findViewById(R.id.enterPassword_Register);
+        mWaiteAnim = findViewById(R.id.animationView);
+        mParent = findViewById(R.id.vicibility);
         //Button FindView
         mBtnRegister = findViewById(R.id.btnregister);
         mBtnRegister.setOnClickListener(this);
         //FireBase
         mAuth = FirebaseAuth.getInstance();
+        fireStore = FirebaseFirestore.getInstance();
 
 
     }
@@ -61,14 +80,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = mPassword.getText().toString().trim();
         //check data
         if (validation(email, password, name)) {
+            inVisibilty();
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-
                         if (task.isSuccessful()) {
+                            mWaiteAnim.setVisibility(View.GONE);
+                            //startActivity
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
-                            Snackbar.make(findViewById(android.R.id.content), " User Created.. ", Snackbar.LENGTH_LONG).show();
+                            //get id
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String id = user.getUid();
+                            upLoudUserData(name, email, password, id);
+
+                            Snackbar.make(findViewById(android.R.id.content), " User Created.. " + id, Snackbar.LENGTH_LONG).show();
+
                         } else {
+                            mWaiteAnim.setVisibility(View.GONE);
+                            mParent.setVisibility(View.VISIBLE);
                             Snackbar.make(findViewById(android.R.id.content), " Check Your Internet.. ", Snackbar.LENGTH_LONG).show();
 
                         }
@@ -81,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     }
+
 
     //METHOD check data
     private boolean validation(String email, String password, String name) {
@@ -107,4 +137,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         return true;
     }
+
+
+    //Visible View
+    private void inVisibilty() {
+        mWaiteAnim.setVisibility(View.VISIBLE);
+        mParent.setVisibility(View.GONE);
+    }
+
+
+    //Upload Data to firebase Firestor
+    private void upLoudUserData(String name, String email, String password, String id) {
+        //save data in shared
+        SaveUserData saveUserData = new SaveUserData(this);
+        saveUserData.SaveData(name, email, true);
+
+        HashMap<String, Object> setData = new HashMap<>();
+        setData.put("name", name);
+        setData.put("email", email);
+        setData.put("password", null);
+        setData.put("userId", id);
+        fireStore.collection("UsersData").document(id).set(setData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+
+    }
+
 }
