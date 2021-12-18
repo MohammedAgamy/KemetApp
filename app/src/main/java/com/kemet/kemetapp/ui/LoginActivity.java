@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +18,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //findView
     EditText mEmail, mPassword;
     Button mBtnLogin;
+    ImageView mBack_Register, mBtnRegister;
 
     //firebase
     FirebaseAuth mAuth;
@@ -35,6 +37,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Button FindView
         mBtnLogin = findViewById(R.id.btnLogin);
         mBtnLogin.setOnClickListener(this);
+
+        mBack_Register = findViewById(R.id.btnBack_Register);
+        mBack_Register.setOnClickListener(this);
+        mBtnRegister = findViewById(R.id.gologin_register);
+        mBtnRegister.setOnClickListener(this);
         //FireBase
         mAuth = FirebaseAuth.getInstance();
 
@@ -46,6 +53,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.btnLogin:
                 logIn();
+                break;
+            case R.id.btnBack_Register:
+                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                finish();
+                break;
+            case R.id.goRegister_Login:
+                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                finish();
                 break;
         }
 

@@ -8,11 +8,10 @@ import android.os.Bundle;
 
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,9 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.core.FirestoreClient;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.SaveUserData;
 
@@ -34,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button mBtnRegister;
     LinearLayout mParent;
     LottieAnimationView mWaiteAnim;
+    ImageView mBack_Login, mBtn_Login;
 
     //firebase
     FirebaseAuth mAuth;
@@ -46,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         iniView();
     }
 
+
     private void iniView() {
         //EditText FindView
         mName = findViewById(R.id.enterName_Register);
@@ -56,11 +55,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //Button FindView
         mBtnRegister = findViewById(R.id.btnregister);
         mBtnRegister.setOnClickListener(this);
+        mBack_Login = findViewById(R.id.btnBack_Register);
+        mBack_Login.setOnClickListener(this);
+        mBtn_Login = findViewById(R.id.gologin_register);
+        mBtn_Login.setOnClickListener(this);
         //FireBase
         mAuth = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
-
-
     }
 
     @Override
@@ -68,6 +69,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch (view.getId()) {
             case R.id.btnregister:
                 register();
+                break;
+            case R.id.btnBack_Register:
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+                break;
+            case R.id.gologin_register:
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
                 break;
         }
     }
@@ -162,6 +171,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<Void> task) {
 
             }
+
         });
 
     }

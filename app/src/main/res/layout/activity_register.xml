@@ -29,7 +29,7 @@
         >
         <!-- Hed back and text signUp -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
                 android:layout_weight="1"
+                android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_baseline_arrow_back_24"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -49,13 +50,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="SignUp"
-                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="100dp"
+                android:text="@string/signup"
                 android:gravity="center"
-                android:layout_weight="8"
                 android:textColor="@color/purple_500"
-                android:textSize="20sp" />
+                android:textSize="35sp" />
 
         </LinearLayout>
 
@@ -176,33 +176,53 @@
                 <!--google SignUp -->
                 <ImageView
                     android:id="@+id/googleRegister"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/btn_google" />
                 <!--facebook SignUp -->
                 <ImageView
                     android:id="@+id/faceBookRegister"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/facebook" />
                 <!--twitter SignUp -->
                 <ImageView
                     android:id="@+id/twitterRegister"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/twitter" />
             </LinearLayout>
         </LinearLayout>
 
         <!--go to login activity -->
-        <ImageView
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
             android:layout_gravity="center"
-            android:src="@drawable/loginimg" />
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I Need  .. "
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="3dp"
+/>
+
+            <ImageView
+                android:id="@+id/gologin_register"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/loginimg" />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
