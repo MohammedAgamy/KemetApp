@@ -38,10 +38,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mBtnLogin = findViewById(R.id.btnLogin);
         mBtnLogin.setOnClickListener(this);
 
-        mBack_Register = findViewById(R.id.btnBack_Register);
-        mBack_Register.setOnClickListener(this);
-        mBtnRegister = findViewById(R.id.gologin_register);
-        mBtnRegister.setOnClickListener(this);
+       /* mBtnRegister = findViewById(R.id.gologin_register);
+        mBtnRegister.setOnClickListener(this);*/
         //FireBase
         mAuth = FirebaseAuth.getInstance();
 
@@ -54,14 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnLogin:
                 logIn();
                 break;
-            case R.id.btnBack_Register:
-                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
-                finish();
-                break;
-            case R.id.goRegister_Login:
-                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
-                finish();
-                break;
+
         }
 
     }

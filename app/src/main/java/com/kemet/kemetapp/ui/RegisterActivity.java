@@ -70,10 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnregister:
                 register();
                 break;
-            case R.id.btnBack_Register:
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                finish();
-                break;
+
             case R.id.gologin_register:
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 finish();

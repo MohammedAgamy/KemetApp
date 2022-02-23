@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_hotielFragment"
+            app:destination="@id/hotielFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_civilizationFragment"
+            app:destination="@id/civilizationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hotielFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.HotielFragment"
+        android:label="fragment_hotiel"
+        tools:layout="@layout/fragment_hotiel" />
+    <fragment
+        android:id="@+id/civilizationFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.CivilizationFragment"
+        android:label="fragment_civilization"
+        tools:layout="@layout/fragment_civilization" />
+</navigation>
