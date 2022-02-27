@@ -43,8 +43,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-
-    // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.0'
 
     //lottie anim...
@@ -68,9 +66,13 @@ dependencies {
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    compile 'com.github.shrikanth7698:Custom-Navigation-Drawer:v0.0.1'
     // Feature module Support
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    //circleimageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
