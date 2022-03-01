@@ -46,9 +46,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
 
     @Override
     public item onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rowItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
-        item item_view = new item(rowItem);
-        return item_view;
+    View rowItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
+    item item_view = new item(rowItem);
+    return item_view;
     }
 
     @Override

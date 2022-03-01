@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kemet.kemetapp.Adapter.HomeAdapter;
+import com.kemet.kemetapp.Adapter.HotelAdapter;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.HomeModel;
+import com.kemet.kemetapp.pojo.HotelModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +29,8 @@ public class HotielFragment extends Fragment {
     RecyclerView mHotelRecycler;
 
     //Model
-    List<HomeModel> mList;
-    HomeAdapter mHotelAdapter;
+    List<HotelModel> mList;
+    HotelAdapter mHotelAdapter;
 
     //Firebase
     FirebaseFirestore mFireStore;
@@ -73,15 +75,15 @@ public class HotielFragment extends Fragment {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                         for (DocumentSnapshot snapshot : list) {
-                            HomeModel homeModel = snapshot.toObject(HomeModel.class);
-                            mList.add(homeModel);
+                            HotelModel hotelModel = snapshot.toObject(HotelModel.class);
+                            mList.add(hotelModel);
                         }
                         mHotelAdapter.notifyDataSetChanged();
                     }
                 });
 
 
-        mHotelAdapter = new HomeAdapter(getActivity(), mList);
+        mHotelAdapter = new HotelAdapter(getActivity(), mList);
         mHotelRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mHotelRecycler.setAdapter(mHotelAdapter);
         mHotelAdapter.notifyDataSetChanged();
