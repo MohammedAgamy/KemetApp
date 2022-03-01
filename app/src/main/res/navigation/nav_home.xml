@@ -27,4 +27,13 @@
         android:name="com.kemet.kemetapp.ui.fragment.CivilizationFragment"
         android:label="fragment_civilization"
         tools:layout="@layout/fragment_civilization" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile"
+        >
+        <action android:id="@id/profileFragment"
+            app:destination="@id/profileFragment"/>
+    </fragment>
 </navigation>

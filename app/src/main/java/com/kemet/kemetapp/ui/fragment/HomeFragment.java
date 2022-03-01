@@ -52,8 +52,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
 
     //Firebase
     FirebaseFirestore mFireStore;
-
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -87,7 +85,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
         mHomeRecycler = view.findViewById(R.id.recyclerHome);
 
 
-        //
+     //
         mList = new ArrayList<>();
 
         //Firebase
@@ -99,6 +97,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
 
     private void getDataFromFirebase() {
 
+        //get data from fireStore
         mFireStore.collection("HomeRecyclerr").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {

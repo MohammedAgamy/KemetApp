@@ -59,7 +59,7 @@ public class HotielFragment extends Fragment {
 
         //View
         mHotelRecycler = view.findViewById(R.id.recyclerHotiel);
-        //
+        //list
         mList = new ArrayList<>();
         //Firebase
         mFireStore = FirebaseFirestore.getInstance();
