@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.kemet.kemetapp.EditProfileActivity;
 import com.kemet.kemetapp.R;
 
 
@@ -91,9 +92,9 @@ public class ProfileFragment extends Fragment {
         Image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Fragment fragment=new Fragment();
-               getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
-
+              // Fragment fragment=new Fragment();
+             //  getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+                startActivity(new Intent(getActivity(), EditProfileActivity.class));
 
             }
         });
