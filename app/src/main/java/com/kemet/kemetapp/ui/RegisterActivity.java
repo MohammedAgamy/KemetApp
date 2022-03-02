@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     //firebase
     FirebaseAuth mAuth;
+
     FirebaseFirestore fireStore;
 
     @Override
