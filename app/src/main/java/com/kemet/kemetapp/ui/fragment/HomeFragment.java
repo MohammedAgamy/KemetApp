@@ -131,5 +131,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_civilizationFragment);
 
         }
+
     }
+
 }
