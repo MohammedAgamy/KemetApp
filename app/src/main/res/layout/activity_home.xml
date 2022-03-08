@@ -9,8 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.HomeActivity"
     tools:openDrawer="left"
-
-
     >
 
     <androidx.fragment.app.FragmentContainerView
@@ -49,18 +47,36 @@
 
         </LinearLayout>
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:background="@drawable/shape_bottom_nav"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:menu="@menu/bottom_navigation_menu"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="663dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navi_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:fitsSystemWindows="true"
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navi_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:fitsSystemWindows="true"
 
-        >
+            >
 
-        <include layout="@layout/nav_menu" />
-    </com.google.android.material.navigation.NavigationView>
+
+            <include layout="@layout/nav_menu" />
+        </com.google.android.material.navigation.NavigationView>
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.kemet.kemetapp.R;
-import com.kemet.kemetapp.pojo.HomeModel;
 import com.kemet.kemetapp.pojo.HotelModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +41,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItem> {
     public void onBindViewHolder(@NonNull @NotNull HotelItem holder, int position) {
         holder.name.setText(mList.get(position).getName());
         Glide.with(mContext).load(mList.get(position).getImage()).into(holder.imgHed);
-        Glide.with(mContext).load(mList.get(position).getRite()).into(holder.imgRating);
+        Glide.with(mContext).load(mList.get(position).getRate()).into(holder.imgRating);
 
     }
 

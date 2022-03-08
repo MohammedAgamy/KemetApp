@@ -71,6 +71,9 @@ dependencies {
     //circleimageview
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //autoimageslider
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    implementation 'com.github.smarteist:autoimageslider:1.4.0-appcompat'
 
 
 }

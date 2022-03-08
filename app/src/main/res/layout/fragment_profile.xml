@@ -39,7 +39,7 @@
         android:layout_marginTop="15dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="25dp"
-        android:src="@mipmap/ic_edit"/>
+        android:src="@mipmap/ic_profile"/>
 
     <ProgressBar
         android:layout_width="wrap_content"

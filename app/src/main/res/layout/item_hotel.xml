@@ -33,6 +33,7 @@
             android:layout_alignBottom="@id/image_item_h"
             android:background="#5905ADD1"
             android:gravity="left"
+            android:paddingLeft="@dimen/_10sdp"
             android:orientation="vertical">
 
             <TextView

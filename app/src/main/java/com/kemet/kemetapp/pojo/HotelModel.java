@@ -3,12 +3,9 @@ package com.kemet.kemetapp.pojo;
 public class HotelModel {
     private String name;
     private String image;
-    private String rite;
+    private String rate;
 
-    public HotelModel(String name, String image, String rite) {
-        this.name = name;
-        this.image = image;
-        this.rite = rite;
+    public HotelModel() {
     }
 
     public String getName() {
@@ -27,11 +24,11 @@ public class HotelModel {
         this.image = image;
     }
 
-    public String getRite() {
-        return rite;
+    public String getRate() {
+        return rate;
     }
 
-    public void setRite(String rite) {
-        this.rite = rite;
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 }

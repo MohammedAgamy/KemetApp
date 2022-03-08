@@ -9,7 +9,9 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.ui.fragment.HomeFragment;
 import com.kemet.kemetapp.ui.fragment.ProfileFragment;
 
 
@@ -17,7 +19,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     DrawerLayout mNavigationDrawer;
     ImageView mOpenMenu;
     ProfileFragment profileFragment;
-    LinearLayout mBtnProfile;
+    HomeFragment homeFragment;
+    LinearLayout mBtnProfile ;
+    BottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         iniView();
         openMenu();
+        onBottomNavSelected();
 
 
     }
@@ -34,11 +39,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void iniView() {
         mOpenMenu = findViewById(R.id.meny_nav);
         mNavigationDrawer = findViewById(R.id.NavigationDrawer);
-        mBtnProfile = findViewById(R.id.icon_profiel);
-        mBtnProfile.setOnClickListener(this);
+        mBottomNavigationView = findViewById(R.id.bottom_navigation);
+         mBtnProfile = findViewById(R.id.icon_profiel);
+         mBtnProfile.setOnClickListener(this);
 
 
         profileFragment = new ProfileFragment();
+        homeFragment = new HomeFragment();
 
 
     }
@@ -48,22 +55,38 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.icon_profiel:
+                ///got to profile
+                //الذهاب الى شاشة البروفيل فرجمنت (intent)
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
                 mNavigationDrawer.close();
                 break;
+
         }
     }
-
-
 
     public void openMenu() {
 
         mOpenMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //فتح النافجيشن من الشمال
                 mNavigationDrawer.openDrawer(Gravity.LEFT);
 
             }
+        });
+    }
+
+    public void onBottomNavSelected() {
+        mBottomNavigationView.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
+            switch (item.getItemId()) {
+                case R.id.home_bottom_nav:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+                    return true;
+                case R.id.profile_bottom_nav:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
+                    return true;
+            }
+            return false;
         });
     }
 

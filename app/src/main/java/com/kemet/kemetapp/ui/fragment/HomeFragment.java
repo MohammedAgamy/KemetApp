@@ -134,4 +134,9 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
 
     }
 
+    @Override
+    public void onItemClick(String pos) {
+
+    }
+
 }
