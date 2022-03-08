@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kemet.kemetapp.EditProfileActivity;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.ui.HomeActivity;
 
 
 public class ProfileFragment extends Fragment {
@@ -149,5 +150,12 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loaddate();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().startActivity(new Intent(getActivity() , HomeActivity.class));
+
     }
     }

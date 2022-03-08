@@ -144,6 +144,7 @@
             android:src="@drawable/ic_baseline_language_24" />
 
         <TextView
+            android:id="@+id/menu_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_3sdp"
@@ -157,7 +158,7 @@
 
     <!-- themes -->
     <LinearLayout
-        android:id="@+id/themes"
+        android:id="@+id/menu_themes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10sdp"
@@ -192,7 +193,7 @@
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/themes">
+        app:layout_constraintTop_toBottomOf="@id/menu_themes">
 
         <ImageView
             android:layout_width="wrap_content"

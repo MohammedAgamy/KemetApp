@@ -16,4 +16,7 @@
     <string name="languages">Languages</string>
     <string name="themes">Themes</string>
     <string name="logout">Logout</string>
+    <string name="load_name">Load Name</string>
+    <string name="order">Order</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

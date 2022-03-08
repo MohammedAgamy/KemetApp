@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_civilizationFragment"
             app:destination="@id/civilizationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_tourGuideFragment"
+            app:destination="@id/tourGuideFragment" />
     </fragment>
     <fragment
         android:id="@+id/hotielFragment"
@@ -45,4 +48,9 @@
         android:name="com.kemet.kemetapp.ui.fragment.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/tourGuideFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.TourGuideFragment"
+        android:label="fragment_tour_guide"
+        tools:layout="@layout/fragment_tour_guide" />
 </navigation>

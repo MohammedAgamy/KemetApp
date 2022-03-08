@@ -2,6 +2,7 @@ package com.kemet.kemetapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.UiModeManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,8 @@ public class SplashActivity extends AppCompatActivity {
     //fireBase
     FirebaseAuth mAuth;
 
+    UiModeManager mUiModeManager ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,8 @@ public class SplashActivity extends AppCompatActivity {
 
         iniView();
         handlerSplash();
+
+
 
     }
 

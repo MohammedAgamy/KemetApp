@@ -8,63 +8,56 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.kemet.kemetapp.Adapter.HomeAdapter;
+import com.google.firebase.firestore.Query;
+import com.kemet.kemetapp.Adapter.TourGuideAdapter;
 import com.kemet.kemetapp.R;
-import com.kemet.kemetapp.pojo.HomeModel;
+import com.kemet.kemetapp.pojo.TourGuideModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
-
+public class TourGuideFragment extends Fragment {
     //view
-    RecyclerView mHomeRecycler;
+    RecyclerView mTourGuideRecycler;
 
     //Model
-    List<HomeModel> mList;
-    HomeAdapter mHomeAdapter;
+    ArrayList<TourGuideModel> mList;
+    TourGuideAdapter mTourGuideAdapter;
 
     //Firebase
     FirebaseFirestore mFireStore;
-    public HomeFragment() {
+
+    public TourGuideFragment() {
         // Required empty public constructor
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_tour_guide, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         iniView(view);
         getDataFromFirebase();
+
     }
 
 
     private void iniView(View view) {
 
         //View
-        mHomeRecycler = view.findViewById(R.id.recyclerHome);
+        mTourGuideRecycler = view.findViewById(R.id.tour_guide_recycler);
         //list
         mList = new ArrayList<>();
         //Firebase
@@ -78,48 +71,25 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
     private void getDataFromFirebase() {
 
         //get data from fireStore
-        mFireStore.collection("HomeRecyclerr").get()
+        mFireStore.collection("TourGuide").orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                         for (DocumentSnapshot snapshot : list) {
-                            HomeModel homeModel = snapshot.toObject(HomeModel.class);
-                            mList.add(homeModel);
+                            TourGuideModel tourGuideModel = snapshot.toObject(TourGuideModel.class);
+                            mList.add(tourGuideModel);
                         }
-                        mHomeAdapter.notifyDataSetChanged();
+                        mTourGuideAdapter.notifyDataSetChanged();
                     }
                 });
 
 
-        mHomeAdapter = new HomeAdapter(getActivity(), mList, this);
-        mHomeRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mHomeRecycler.setAdapter(mHomeAdapter);
-        mHomeAdapter.notifyDataSetChanged();
+        mTourGuideAdapter = new TourGuideAdapter(getActivity(), mList);
+        mTourGuideRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTourGuideRecycler.setAdapter(mTourGuideAdapter);
+        mTourGuideAdapter.notifyDataSetChanged();
 
-
-    }
-
-
-    @Override
-    public void onClick_Home(String s) {
-        if (s.equalsIgnoreCase("0")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_hotielFragment);
-
-        }
-        if (s.equalsIgnoreCase("1")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_tourGuideFragment);
-
-        }
-
-        if (s.equalsIgnoreCase("2")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_civilizationFragment);
-
-        }
-
-    }
-
-    @Override
-    public void onItemClick(String pos) {
 
     }
 

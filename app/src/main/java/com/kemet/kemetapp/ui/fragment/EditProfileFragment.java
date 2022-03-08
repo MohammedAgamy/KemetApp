@@ -3,6 +3,7 @@ package com.kemet.kemetapp.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.ui.HomeActivity;
 
 import java.util.HashMap;
 
@@ -69,6 +71,7 @@ public class EditProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
 
@@ -200,5 +203,6 @@ public class EditProfileFragment extends Fragment {
                 });
 
     }
+
 
 }
