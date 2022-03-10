@@ -57,6 +57,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
         holder.name.setText(mList.get(position).getName());
         Glide.with(mContext).load(mList.get(position).getImage()).into(holder.img);
 
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -24,12 +24,20 @@
         android:id="@+id/hotielFragment"
         android:name="com.kemet.kemetapp.ui.fragment.HotielFragment"
         android:label="fragment_hotiel"
-        tools:layout="@layout/fragment_hotiel" />
+        tools:layout="@layout/fragment_hotiel" >
+        <action
+            android:id="@+id/action_hotielFragment_to_hotelInformationFragment"
+            app:destination="@id/hotelInformationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/civilizationFragment"
         android:name="com.kemet.kemetapp.ui.fragment.CivilizationFragment"
         android:label="fragment_civilization"
-        tools:layout="@layout/fragment_civilization" />
+        tools:layout="@layout/fragment_civilization" >
+        <action
+            android:id="@+id/action_civilizationFragment_to_civilizationInformationFragment"
+            app:destination="@id/civilizationInformationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.kemet.kemetapp.ui.fragment.ProfileFragment"
@@ -53,4 +61,14 @@
         android:name="com.kemet.kemetapp.ui.fragment.TourGuideFragment"
         android:label="fragment_tour_guide"
         tools:layout="@layout/fragment_tour_guide" />
+    <fragment
+        android:id="@+id/hotelInformationFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.HotelInformationFragment"
+        android:label="fragment_hotel_information"
+        tools:layout="@layout/fragment_hotel_information" />
+    <fragment
+        android:id="@+id/civilizationInformationFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.civilizationInformationFragment"
+        android:label="fragment_civilization_information"
+        tools:layout="@layout/fragment_civilization_information" />
 </navigation>

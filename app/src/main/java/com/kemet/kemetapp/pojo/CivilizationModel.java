@@ -1,13 +1,14 @@
 package com.kemet.kemetapp.pojo;
 
-public class HotelModel {
-    private String name;
-    private String image;
-    private String id;
-    private String timestamp ;
-    private String rate;
+public class CivilizationModel {
+    private String name ;
+    private String image ;
+    private String id ;
+    private  String timestamp;
 
-    public HotelModel() {
+
+
+    public CivilizationModel() {
     }
 
     public String getName() {
@@ -26,14 +27,6 @@ public class HotelModel {
         this.image = image;
     }
 
-    public String getRate() {
-        return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
-
     public String getId() {
         return id;
     }
@@ -41,4 +34,6 @@ public class HotelModel {
     public void setId(String id) {
         this.id = id;
     }
+
+
 }

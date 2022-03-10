@@ -1,6 +1,8 @@
 package com.kemet.kemetapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.HotelModel;
+import com.kemet.kemetapp.ui.fragment.HotelInformationFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,11 +27,13 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItem> {
 
     Context mContext;
     List<HotelModel> mList;
+    OnClickHotel onClickHotel ;
 
 
-    public HotelAdapter(Context mContext, List<HotelModel> mList) {
+    public HotelAdapter(Context mContext, List<HotelModel> mList ,OnClickHotel onClickHotel) {
         this.mContext = mContext;
         this.mList = mList;
+        this.onClickHotel =onClickHotel ;
     }
 
     @Override
@@ -42,6 +48,14 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItem> {
         holder.name.setText(mList.get(position).getName());
         Glide.with(mContext).load(mList.get(position).getImage()).into(holder.imgHed);
         Glide.with(mContext).load(mList.get(position).getRate()).into(holder.imgRating);
+
+        holder.itemView.setOnClickListener(view -> {
+
+            onClickHotel.onClickHotelItem(mList.get(position).getId());
+
+
+
+        });
 
     }
 
@@ -64,5 +78,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItem> {
 
 
       }
+  }
+
+
+
+  public interface OnClickHotel
+  {
+      void onClickHotelItem(String id);
   }
 }

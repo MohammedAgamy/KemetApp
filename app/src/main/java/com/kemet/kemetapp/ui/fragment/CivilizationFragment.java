@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.kemet.kemetapp.Adapter.CivilizationAdapter;
 import com.kemet.kemetapp.Adapter.HomeAdapter;
 import com.kemet.kemetapp.R;
+import com.kemet.kemetapp.pojo.CivilizationModel;
 import com.kemet.kemetapp.pojo.HomeModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CivilizationFragment extends Fragment {
+public class CivilizationFragment extends Fragment implements CivilizationAdapter.OnClickCivilization{
     //view
     RecyclerView mCivilizationRecycler;
 
     //Model
-    List<HomeModel> mList;
-    HomeAdapter mCivilizationAdapter;
+    List<CivilizationModel> mList;
+    CivilizationAdapter mCivilizationAdapter;
 
     //Firebase
     FirebaseFirestore mFireStore;
@@ -40,12 +42,6 @@ public class CivilizationFragment extends Fragment {
     }
 
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,7 +80,7 @@ public class CivilizationFragment extends Fragment {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                         for (DocumentSnapshot snapshot : list) {
-                            HomeModel homeModel = snapshot.toObject(HomeModel.class);
+                            CivilizationModel homeModel = snapshot.toObject(CivilizationModel.class);
                             mList.add(homeModel);
                         }
                         mCivilizationAdapter.notifyDataSetChanged();
@@ -92,9 +88,18 @@ public class CivilizationFragment extends Fragment {
                 });
 
 
-        mCivilizationAdapter = new HomeAdapter(getActivity(), mList);
+        mCivilizationAdapter = new CivilizationAdapter(getActivity(), mList,this);
         mCivilizationRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCivilizationRecycler.setAdapter(mCivilizationAdapter);
         mCivilizationAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClickCivizItem(String id) {
+        civilizationInformationFragment civilizationInformationFragment=new civilizationInformationFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("civilizationFragment" ,id);
+        civilizationInformationFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationInformationFragment).commit();
     }
 }

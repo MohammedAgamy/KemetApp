@@ -1,17 +1,17 @@
 package com.kemet.kemetapp.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,27 +20,28 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kemet.kemetapp.R;
-import com.kemet.kemetapp.ui.HomeActivity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HotelInformationFragment extends Fragment {
+public class civilizationInformationFragment extends Fragment {
+
     FirebaseFirestore mFirestore;
     DocumentReference documentReference;
-    String idHotel;
+    String mIdCiv;
 
-    TextView mHotel_Name;
+    TextView mCiv_Name;
 
-    public HotelInformationFragment() {
+    public civilizationInformationFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hotel_information, container, false);
+        return inflater.inflate(R.layout.fragment_civilization_information, container, false);
     }
 
     @Override
@@ -48,30 +49,30 @@ public class HotelInformationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Bundle bundle = getArguments();
-        idHotel = (String) bundle.get("idHotel");
+        mIdCiv = (String) bundle.get("civilizationFragment");
         //firebase
         mFirestore = FirebaseFirestore.getInstance();
         //View
-        mHotel_Name = view.findViewById(R.id.hotel_name_inf);
+        mCiv_Name = view.findViewById(R.id.civ_name_inf);
         getDataFromFireBase();
     }
 
-    // HotelInformation
-    private void getDataFromFireBase() {
-
-        mFirestore.collection("HotelItemInfomation")
+    private void getDataFromFireBase()
+    {
+        mFirestore.collection("CivilizationInformation")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshots : task.getResult()) {
-                                String id = documentSnapshots.getString("idhotel");
-                                String hotelName = documentSnapshots.getString("name");
+                                String id = documentSnapshots.getString("idCiv");
+                                String civName = documentSnapshots.getString("name");
 
-                                if (idHotel.equalsIgnoreCase(id)) {
-                                    mHotel_Name.setText(hotelName);
+                                if (mIdCiv.equalsIgnoreCase(id)) {
+                                    mCiv_Name.setText(civName);
                                 }
+
                                 Log.d("taskTag", documentSnapshots.getId());
                             }
                         } else {
@@ -81,15 +82,13 @@ public class HotelInformationFragment extends Fragment {
 
                     }
                 });
-
-
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
-       HotielFragment hotielFragment=new HotielFragment();
-       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotielFragment).commit();
-
+        CivilizationFragment civilizationFragment=new CivilizationFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationFragment).commit();
     }
 }

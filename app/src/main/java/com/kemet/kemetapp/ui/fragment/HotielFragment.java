@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.kemet.kemetapp.Adapter.HomeAdapter;
 import com.kemet.kemetapp.Adapter.HotelAdapter;
 import com.kemet.kemetapp.R;
-import com.kemet.kemetapp.pojo.HomeModel;
 import com.kemet.kemetapp.pojo.HotelModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotielFragment extends Fragment {
+public class HotielFragment extends Fragment implements HotelAdapter.OnClickHotel{
     //view
     RecyclerView mHotelRecycler;
 
@@ -83,10 +81,18 @@ public class HotielFragment extends Fragment {
                 });
 
 
-        mHotelAdapter = new HotelAdapter(getActivity(), mList);
+        mHotelAdapter = new HotelAdapter(getActivity(), mList,this);
         mHotelRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mHotelRecycler.setAdapter(mHotelAdapter);
         mHotelAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onClickHotelItem(String id) {
+       HotelInformationFragment hotelInformationFragment=new HotelInformationFragment();
+       Bundle bundle=new Bundle();
+       bundle.putString("idHotel" ,id);
+       hotelInformationFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotelInformationFragment).commit();
+    }
 }

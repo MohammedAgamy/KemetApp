@@ -75,6 +75,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.icon_profiel:
                 ///got to profile
                 //الذهاب الى شاشة البروفيل فرجمنت (intent)
+                mBtnProfile.setBackgroundResource(R.color.linermenu);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
                 mNavigationDrawer.close();
                 break;
@@ -83,9 +84,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //changeThemes
             case R.id.menu_themes:
+                mBtnThemes.setBackgroundResource(R.color.linermenu);
                 changeThemes();
                 break;
             case R.id.logOut:
+                mLogOut.setBackgroundResource(R.color.linermenu);
                 mAuth.signOut();
                 startActivity(new Intent(HomeActivity.this, SplashActivity.class));
                 finish();

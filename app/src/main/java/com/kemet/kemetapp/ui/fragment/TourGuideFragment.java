@@ -71,7 +71,7 @@ public class TourGuideFragment extends Fragment {
     private void getDataFromFirebase() {
 
         //get data from fireStore
-        mFireStore.collection("TourGuide").orderBy("timestamp", Query.Direction.ASCENDING)
+        mFireStore.collection("TourGuide")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -93,4 +93,10 @@ public class TourGuideFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        HomeFragment homeFragment=new HomeFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,homeFragment).commit();
+    }
 }
