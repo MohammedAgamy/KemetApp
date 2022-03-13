@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.kemet.kemetapp.ui.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_hotielFragment"
             app:destination="@id/hotielFragment" />
@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_tourGuideFragment"
             app:destination="@id/tourGuideFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_carFragment"
+            app:destination="@id/carFragment" />
     </fragment>
     <fragment
         android:id="@+id/hotielFragment"
@@ -65,10 +68,24 @@
         android:id="@+id/hotelInformationFragment"
         android:name="com.kemet.kemetapp.ui.fragment.HotelInformationFragment"
         android:label="fragment_hotel_information"
-        tools:layout="@layout/fragment_hotel_information" />
+        tools:layout="@layout/fragment_hotel_information">
+        <action
+            android:id="@+id/action_hotelInformationFragment_to_showAllRoomFragment"
+            app:destination="@id/showAllRoomFragment" />
+    </fragment>
     <fragment
         android:id="@+id/civilizationInformationFragment"
         android:name="com.kemet.kemetapp.ui.fragment.civilizationInformationFragment"
         android:label="fragment_civilization_information"
         tools:layout="@layout/fragment_civilization_information" />
+    <fragment
+        android:id="@+id/carFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.CarFragment"
+        android:label="fragment_car"
+        tools:layout="@layout/fragment_car" />
+    <fragment
+        android:id="@+id/showAllRoomFragment"
+        android:name="com.kemet.kemetapp.ui.fragment.ShowAllRoomFragment"
+        android:label="fragment_show_all_room"
+        tools:layout="@layout/fragment_show_all_room" />
 </navigation>

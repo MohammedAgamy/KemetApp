@@ -67,7 +67,7 @@ public class CarFragment extends Fragment {
     }
     private void getData(){
         progressBar.setVisibility(View.VISIBLE);
-        firebaseFirestore.collection("Lemosin")
+        firebaseFirestore.collection("Car")
                 .orderBy("time", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
 

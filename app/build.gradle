@@ -66,6 +66,10 @@ dependencies {
     //picasso image
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    //slideImage
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
+
+
 
     //navGraph
     def nav_version = "2.4.0"

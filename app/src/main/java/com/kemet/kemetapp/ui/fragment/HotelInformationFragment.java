@@ -1,17 +1,16 @@
 package com.kemet.kemetapp.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,17 +18,23 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.kemet.kemetapp.Adapter.SliderAdapter;
 import com.kemet.kemetapp.R;
-import com.kemet.kemetapp.ui.HomeActivity;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HotelInformationFragment extends Fragment {
+public class HotelInformationFragment extends Fragment implements View.OnClickListener {
     FirebaseFirestore mFirestore;
-    DocumentReference documentReference;
     String idHotel;
 
     TextView mHotel_Name;
+    Button mBtn_SelectRoom;
+    SliderView mSliderView;
+
+    int[] slideImage = {R.drawable.hotel6, R.drawable.hotel7, R.drawable.hotel8, R.drawable.hotel9};
 
     public HotelInformationFragment() {
         // Required empty public constructor
@@ -53,7 +58,20 @@ public class HotelInformationFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         //View
         mHotel_Name = view.findViewById(R.id.hotel_name_inf);
+        mBtn_SelectRoom = view.findViewById(R.id.hotel_select_room);
+        mBtn_SelectRoom.setOnClickListener(this);
+        mSliderView = view.findViewById(R.id.imageSlider);
+
         getDataFromFireBase();
+        showImageSlider();
+    }
+
+    private void showImageSlider() {
+        SliderAdapter sliderAdapter = new SliderAdapter(slideImage);
+        mSliderView.setSliderAdapter(sliderAdapter);
+        mSliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        mSliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
+        mSliderView.startAutoCycle();
     }
 
     // HotelInformation
@@ -85,11 +103,26 @@ public class HotelInformationFragment extends Fragment {
 
     }
 
+    /*
     @Override
     public void onPause() {
         super.onPause();
-       HotielFragment hotielFragment=new HotielFragment();
-       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotielFragment).commit();
+        HotielFragment hotielFragment = new HotielFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, hotielFragment).commit();
 
+    }*/
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.hotel_select_room:
+                selectRoom();
+                break;
+        }
+    }
+
+    private void selectRoom() {
+        ShowAllRoomFragment showAllRoomFragment = new ShowAllRoomFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, showAllRoomFragment).commit();
     }
 }
