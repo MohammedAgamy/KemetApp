@@ -66,6 +66,7 @@
         android:id="@+id/menu_nationlity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_marginHorizontal="25dp"
         android:layout_marginTop="13dp"
         android:hint="@string/nationality"
@@ -74,6 +75,7 @@
         app:layout_constraintTop_toBottomOf="@id/textField2">
 
         <AutoCompleteTextView
+            android:id="@+id/spinnerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none" />
@@ -110,5 +112,78 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:id="@+id/selectStartData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/tackPhoto"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:textSize="@dimen/_15ssp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_3sdp"
+            android:src="@drawable/ic_baseline_calendar_today_24"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_start_date"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+
+            />
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/selectEndData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/selectStartData"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:textSize="@dimen/_15ssp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_3sdp"
+            android:src="@drawable/ic_baseline_calendar_today_24"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_end_date"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_select_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:text="Order"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selectEndData" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

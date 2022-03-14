@@ -28,7 +28,9 @@
     <string name="apout_place">About Place</string>
     <string name="enter_your_name">Enter Your Name</string>
     <string name="tackpasportphoto">Tack Passport Photo</string>
-
+    <string name="enter_your_nationality">Enter Your Nationality</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End Date</string>
 
 
     <string-array name="menuNationalite" >
