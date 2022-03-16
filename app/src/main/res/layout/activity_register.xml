@@ -11,22 +11,21 @@
         android:id="@+id/animationView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        app:lottie_rawRes="@raw/meditationwaitplease"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:lottie_rawRes="@raw/meditationwaitplease" />
 
     <LinearLayout
         android:id="@+id/vicibility"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        >
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
         <!-- Hed back and text signUp -->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,9 +38,9 @@
                 android:id="@+id/btnBack_Register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="13dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_baseline_arrow_back_24"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -50,10 +49,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
                 android:layout_marginLeft="100dp"
-                android:text="@string/signup"
+                android:layout_marginTop="3dp"
                 android:gravity="center"
+                android:text="@string/signup"
                 android:textColor="@color/purple_500"
                 android:textSize="35sp" />
 
@@ -201,18 +200,17 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp"
             android:layout_gravity="center"
-            >
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="I Need  .. "
-                android:gravity="center"
-                android:textSize="20sp"
                 android:layout_marginTop="3dp"
-/>
+                android:gravity="center"
+                android:text="I Need  .. "
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/gologin_register"

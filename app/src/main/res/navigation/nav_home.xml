@@ -31,6 +31,7 @@
         <action
             android:id="@+id/action_hotielFragment_to_hotelInformationFragment"
             app:destination="@id/hotelInformationFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/civilizationFragment"

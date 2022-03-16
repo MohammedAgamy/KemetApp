@@ -33,7 +33,7 @@
     <string name="select_end_date">Select End Date</string>
 
 
-    <string-array name="menuNationalite" >
+    <string-array name="menuNationalite">
 
         <item>Egypt</item>
         <item>Belize</item>

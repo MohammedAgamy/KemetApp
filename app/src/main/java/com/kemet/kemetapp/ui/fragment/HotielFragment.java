@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotielFragment extends Fragment implements HotelAdapter.OnClickHotel{
+public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHotel{
     //view
     RecyclerView mHotelRecycler;
 

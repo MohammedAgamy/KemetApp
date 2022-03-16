@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CarFragment extends Fragment {
+public class CarFragment extends Fragment implements CarAdapter.OnClickCar{
     private RecyclerView recyclerView;
     private FirebaseFirestore firebaseFirestore;
     private ProgressBar progressBar;
@@ -60,7 +60,7 @@ public class CarFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
         list=new ArrayList<>();
-        adapter=new CarAdapter(getActivity(),list);
+        adapter=new CarAdapter(getActivity(),list,this);
         recyclerView.setAdapter(adapter);
         getData();
 
@@ -92,5 +92,11 @@ public class CarFragment extends Fragment {
                     }
 
                 });
+    }
+
+    @Override
+    public void onItemClick() {
+        CarOrderFragment carOrderFragment=new CarOrderFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, carOrderFragment).commit();
     }
 }

@@ -1,9 +1,7 @@
 package com.kemet.kemetapp.ui.fragment;
 
 import android.app.Dialog;
-import android.app.Notification;
 import android.content.Intent;
-import android.drm.DrmStore;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -25,13 +23,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kemet.kemetapp.Adapter.SliderAdapter;
 import com.kemet.kemetapp.R;
@@ -40,28 +38,25 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
-import javax.xml.transform.Result;
+public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
-public class RoomOrderFragment extends Fragment implements View.OnClickListener {
     private SliderView mSliderView;
     private AutoCompleteTextView TextInputLayout;
     private EditText mUserName;
     private LinearLayout mTackPhoto, mSelectStartDate, mSelectEndDate;
     private Button mUploadOrder_btn;
 
-    int[] slideImage = {R.drawable.hotel6, R.drawable.hotel7, R.drawable.hotel8, R.drawable.hotel9};
-    int cameraCode = 220;
-    String mName , mNationality , mImagePass,mStatDate, mEndDate ;
+
+    private int[] slideImage = {R.drawable.car1, R.drawable.car2, R.drawable.car3, R.drawable.car4};
+    private int cameraCode = 210;
+    private String mName, mNationality, mImagePass, mStatDate, mEndDate;
 
 
-    FirebaseFirestore mFirebaseFirestore ;
+    FirebaseFirestore mFirebaseFirestore;
 
-
-    public RoomOrderFragment() {
+    public CarOrderFragment() {
         // Required empty public constructor
     }
 
@@ -69,27 +64,47 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_room_order, container, false);
+        return inflater.inflate(R.layout.fragment_car_order, container, false);
     }
 
-
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSliderView = view.findViewById(R.id.imageSlider_r);
-        TextInputLayout = view.findViewById(R.id.spinnerView);
-        mUserName=view.findViewById(R.id.enterName_roomOrder);
-        mTackPhoto = view.findViewById(R.id.tackPhoto);
+
+
+
+        iniView(view);
+    }
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                CarFragment carFragment=new CarFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,carFragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+
+    }
+
+    private void iniView(View view) {
+        mSliderView = view.findViewById(R.id.imageSlider_c);
+        TextInputLayout = view.findViewById(R.id.spinnerView_car);
+        mUserName = view.findViewById(R.id.enterName_carOrder);
+        mTackPhoto = view.findViewById(R.id.tackPhoto_car);
         mTackPhoto.setOnClickListener(this);
-        mSelectStartDate=view.findViewById(R.id.selectStartData);
+        mSelectStartDate = view.findViewById(R.id.selectStartData_car);
         mSelectStartDate.setOnClickListener(this);
-        mSelectEndDate=view.findViewById(R.id.selectEndData);
+        mSelectEndDate = view.findViewById(R.id.selectEndData_car);
         mSelectEndDate.setOnClickListener(this);
-        mUploadOrder_btn=view.findViewById(R.id.btn_select_room);
+        mUploadOrder_btn = view.findViewById(R.id.btn_select_car);
         mUploadOrder_btn.setOnClickListener(this);
 
 
-        mFirebaseFirestore=FirebaseFirestore.getInstance();
+        mFirebaseFirestore = FirebaseFirestore.getInstance();
 
         showImageSlider();
         showSpinner();
@@ -104,6 +119,27 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
         mSliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         mSliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
         mSliderView.startAutoCycle();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tackPhoto_car:
+                tackPassportPhoto();
+                break;
+            case R.id.selectStartData_car:
+                selectStartDate();
+                break;
+            case R.id.selectEndData_car:
+                selectEndDate();
+
+                break;
+
+            case R.id.btn_select_car:
+                uploadData();
+                break;
+        }
     }
 
 
@@ -191,38 +227,15 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tackPhoto:
-                tackPassportPhoto();
-                break;
-            case R.id.selectStartData:
-               selectStartDate();
-                break;
-            case R.id.selectEndData:
-                selectEndDate();
-
-                break;
-
-            case R.id.btn_select_room:
-                uploadData();
-                break;
-        }
-    }
-
-
-
-
     private void selectStartDate() {
-        MaterialDatePicker.Builder materialBuilder =MaterialDatePicker.Builder.datePicker();
-        MaterialDatePicker materialDatePicker=materialBuilder.build();
+        MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker materialDatePicker = materialBuilder.build();
 
-        materialDatePicker.show(getActivity().getSupportFragmentManager(),"");
+        materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
 
 
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
-                mStatDate  = materialDatePicker.getHeaderText());
+                mStatDate = materialDatePicker.getHeaderText());
 
 
     }
@@ -230,70 +243,51 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
     private void selectEndDate() {
 
-        MaterialDatePicker.Builder materialBuilder =MaterialDatePicker.Builder.datePicker();
-        MaterialDatePicker materialDatePicker=materialBuilder.build();
+        MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker materialDatePicker = materialBuilder.build();
 
-        materialDatePicker.show(getActivity().getSupportFragmentManager(),"");
+        materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
 
 
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
-              mEndDate =materialDatePicker.getHeaderText());
+                mEndDate = materialDatePicker.getHeaderText());
 
     }
+
 
     private void uploadData() {
+        mName = mUserName.getText().toString();
+        OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate);
+        mFirebaseFirestore.collection("UserInfoCar").document().set(orderRoomModel)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
 
-        mName=mUserName.getText().toString();
-        if(!mName.isEmpty())
-        {
-            OrderRoomModel  orderRoomModel= new OrderRoomModel(mName,mNationality,mStatDate,mEndDate);
-            mFirebaseFirestore.collection("UserInfoRoom").document().set(orderRoomModel)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
-                                Dialog dialog=new Dialog(getActivity());
-                                dialog.setContentView(R.layout.don_item);
-                                dialog.setTitle("Order Created");
-                                dialog.show();
+                        if(task.isSuccessful())
+                        {
+                            Dialog dialog=new Dialog(getActivity());
+                            dialog.setContentView(R.layout.don_item);
+                            dialog.setTitle("Order Created");
+                            dialog.show();
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ShowAllRoomFragment roomFragment=new ShowAllRoomFragment();
-                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, roomFragment).commit();
-                                        dialog.dismiss();
-                                    }
-                                },4000);
-                            }
-                            else
-                            {
-                                Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
-                            }
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                    CarFragment carFragment=new CarFragment();
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, carFragment).commit();
+                                }
+                            },4000);
                         }
-                    });
+                        else
+                        {
+                            Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
 
 
-        }
-        else
-        {
-            Toast.makeText(getActivity(), "Enter Your Data", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void onBack() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-
-                ShowAllRoomFragment fragment=new ShowAllRoomFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
-            }
-
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
 
     }
 }

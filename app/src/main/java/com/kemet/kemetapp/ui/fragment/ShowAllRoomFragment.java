@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -48,6 +49,7 @@ public class ShowAllRoomFragment extends Fragment implements RoomAdapter.OnClick
         super.onViewCreated(view, savedInstanceState);
 
         iniView(view);
+
     }
 
     private void iniView(View view) {
@@ -89,5 +91,19 @@ public class ShowAllRoomFragment extends Fragment implements RoomAdapter.OnClick
     {
         RoomOrderFragment roomOrderFragment = new RoomOrderFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, roomOrderFragment).commit();
+    }
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                HotelInformationFragment fragment=new HotelInformationFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+
     }
 }

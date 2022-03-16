@@ -101,5 +101,7 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
         bundle.putString("civilizationFragment" ,id);
         civilizationInformationFragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationInformationFragment).commit();
+
+
     }
 }

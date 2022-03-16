@@ -23,18 +23,19 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.ViewHolder> {
 
     private Context context;
     private List<CarModel> list;
+    private OnClickCar onClickCar;
 
-
-    public CarAdapter(Context context, List<CarModel> list) {
+    public CarAdapter(Context context, List<CarModel> list, OnClickCar onClickCar) {
         this.context = context;
         this.list = list;
+        this.onClickCar = onClickCar;
     }
 
     @NonNull
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_car, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_car, parent, false));
     }
 
     @Override
@@ -42,11 +43,18 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.ViewHolder> {
         holder.setname(list.get(position).getName());
         holder.setcarmodel(list.get(position).getModel());
         holder.setImage(list.get(position).getImage());
+
+        holder.order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickCar.onItemClick();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-         return list.size();
+        return list.size();
     }
 
 
@@ -82,5 +90,9 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.ViewHolder> {
                     .into(image);
         }
 
+    }
+
+    public interface OnClickCar {
+        void onItemClick();
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -64,6 +65,7 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
         getDataFromFireBase();
         showImageSlider();
+
     }
 
     private void showImageSlider() {
@@ -124,5 +126,19 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     private void selectRoom() {
         ShowAllRoomFragment showAllRoomFragment = new ShowAllRoomFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, showAllRoomFragment).commit();
+    }
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                HotielFragment fragment=new HotielFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+
     }
 }
