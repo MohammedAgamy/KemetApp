@@ -1,14 +1,20 @@
 package com.kemet.kemetapp.ui.fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Notification;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.drm.DrmStore;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -32,19 +38,26 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.kemet.kemetapp.Adapter.SliderAdapter;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.OrderRoomModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import javax.xml.transform.Result;
+
+import static android.app.Activity.RESULT_OK;
 
 public class RoomOrderFragment extends Fragment implements View.OnClickListener {
     private SliderView mSliderView;
@@ -55,10 +68,12 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
     int[] slideImage = {R.drawable.hotel6, R.drawable.hotel7, R.drawable.hotel8, R.drawable.hotel9};
     int cameraCode = 220;
-    String mName , mNationality , mImagePass,mStatDate, mEndDate ;
+    String mName, mNationality, mImagePass, mStatDate, mEndDate;
+    Uri resultUri;
 
+    FirebaseFirestore mFirebaseFirestore;
+    private StorageReference storageReference;
 
-    FirebaseFirestore mFirebaseFirestore ;
 
 
     public RoomOrderFragment() {
@@ -78,21 +93,23 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
         super.onViewCreated(view, savedInstanceState);
         mSliderView = view.findViewById(R.id.imageSlider_r);
         TextInputLayout = view.findViewById(R.id.spinnerView);
-        mUserName=view.findViewById(R.id.enterName_roomOrder);
+        mUserName = view.findViewById(R.id.enterName_roomOrder);
         mTackPhoto = view.findViewById(R.id.tackPhoto);
         mTackPhoto.setOnClickListener(this);
-        mSelectStartDate=view.findViewById(R.id.selectStartData);
+        mSelectStartDate = view.findViewById(R.id.selectStartData);
         mSelectStartDate.setOnClickListener(this);
-        mSelectEndDate=view.findViewById(R.id.selectEndData);
+        mSelectEndDate = view.findViewById(R.id.selectEndData);
         mSelectEndDate.setOnClickListener(this);
-        mUploadOrder_btn=view.findViewById(R.id.btn_select_room);
+        mUploadOrder_btn = view.findViewById(R.id.btn_select_room);
         mUploadOrder_btn.setOnClickListener(this);
 
 
-        mFirebaseFirestore=FirebaseFirestore.getInstance();
+        mFirebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         showImageSlider();
         showSpinner();
+        onBack();
 
 
     }
@@ -171,58 +188,60 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
     }
 
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // to ask user to reade external storage
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+            } else {
+                tackPassportPhoto();
+            }
+        }
+    }
+
 
     private void tackPassportPhoto() {
-        Intent tackPhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (tackPhotoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(tackPhotoIntent, cameraCode);
-        } else {
-            Toast.makeText(getActivity(), "error open  ", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(getActivity(), "open", Toast.LENGTH_SHORT).show();
+        CropImage.activity()
+                .start(getContext(), this);
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == cameraCode && resultCode == getActivity().RESULT_OK && data != null) {
-            Toast.makeText(getActivity(), "Don", Toast.LENGTH_SHORT).show();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                resultUri = result.getUri();
+                uPloadImage(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tackPhoto:
-                tackPassportPhoto();
-                break;
-            case R.id.selectStartData:
-               selectStartDate();
-                break;
-            case R.id.selectEndData:
-                selectEndDate();
+    private void uPloadImage(Uri resultUri) {
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        String userID=auth.getCurrentUser().getUid();
+        final StorageReference ref = storageReference.child("RoomOrder").child(userID + ".jpg");
+        ref.putFile(resultUri);
 
-                break;
-
-            case R.id.btn_select_room:
-                uploadData();
-                break;
-        }
     }
-
 
 
 
     private void selectStartDate() {
-        MaterialDatePicker.Builder materialBuilder =MaterialDatePicker.Builder.datePicker();
-        MaterialDatePicker materialDatePicker=materialBuilder.build();
-
-        materialDatePicker.show(getActivity().getSupportFragmentManager(),"");
-
-
+        MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker materialDatePicker = materialBuilder.build();
+        materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
-                mStatDate  = materialDatePicker.getHeaderText());
+                mStatDate = materialDatePicker.getHeaderText());
 
 
     }
@@ -230,30 +249,25 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
     private void selectEndDate() {
 
-        MaterialDatePicker.Builder materialBuilder =MaterialDatePicker.Builder.datePicker();
-        MaterialDatePicker materialDatePicker=materialBuilder.build();
-
-        materialDatePicker.show(getActivity().getSupportFragmentManager(),"");
-
-
+        MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker materialDatePicker = materialBuilder.build();
+        materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
-              mEndDate =materialDatePicker.getHeaderText());
+                mEndDate = materialDatePicker.getHeaderText());
 
     }
 
     private void uploadData() {
 
-        mName=mUserName.getText().toString();
-        if(!mName.isEmpty())
-        {
-            OrderRoomModel  orderRoomModel= new OrderRoomModel(mName,mNationality,mStatDate,mEndDate);
+        mName = mUserName.getText().toString();
+        if (!mName.isEmpty()) {
+            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate);
             mFirebaseFirestore.collection("UserInfoRoom").document().set(orderRoomModel)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
-                                Dialog dialog=new Dialog(getActivity());
+                            if (task.isSuccessful()) {
+                                Dialog dialog = new Dialog(getActivity());
                                 dialog.setContentView(R.layout.don_item);
                                 dialog.setTitle("Order Created");
                                 dialog.show();
@@ -261,23 +275,19 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ShowAllRoomFragment roomFragment=new ShowAllRoomFragment();
+                                        ShowAllRoomFragment roomFragment = new ShowAllRoomFragment();
                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, roomFragment).commit();
                                         dialog.dismiss();
                                     }
-                                },4000);
-                            }
-                            else
-                            {
+                                }, 4000);
+                            } else {
                                 Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
 
-        }
-        else
-        {
+        } else {
             Toast.makeText(getActivity(), "Enter Your Data", Toast.LENGTH_SHORT).show();
         }
 
@@ -288,12 +298,31 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
             @Override
             public void handleOnBackPressed() {
 
-                ShowAllRoomFragment fragment=new ShowAllRoomFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
+                ShowAllRoomFragment fragment = new ShowAllRoomFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
             }
 
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tackPhoto:
+                checkPermission();
+                break;
+            case R.id.selectStartData:
+                selectStartDate();
+                break;
+            case R.id.selectEndData:
+                selectEndDate();
+                break;
+            case R.id.btn_select_room:
+                uploadData();
+                break;
+        }
     }
 }

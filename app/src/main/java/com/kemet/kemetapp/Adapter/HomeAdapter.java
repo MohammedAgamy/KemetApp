@@ -101,7 +101,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
 
    public interface HomeOnClick {
         void onClick_Home(String s);
-
        void onItemClick(String pos);
    }
 }

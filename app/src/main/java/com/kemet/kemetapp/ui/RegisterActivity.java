@@ -171,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mParent.setVisibility(View.GONE);
     }
 
-
+    //رفع بيانات المستخدم
     //Upload Data to firebase Firestor
     private void upLoudUserData(String name, String email, String password, String id) {
         //save data in shared
@@ -194,6 +194,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    //تسجيل مستخدم بجوجل
     public void signInWithGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -229,6 +230,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+
+    //تسجيل مستخدم ب الاميل
     private void firebaseAuthWithGoogle(String idToken) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);

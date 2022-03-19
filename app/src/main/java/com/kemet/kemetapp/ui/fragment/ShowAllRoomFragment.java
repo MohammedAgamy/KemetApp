@@ -49,6 +49,7 @@ public class ShowAllRoomFragment extends Fragment implements RoomAdapter.OnClick
         super.onViewCreated(view, savedInstanceState);
 
         iniView(view);
+        onBack();
 
     }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -52,6 +53,7 @@ public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHot
 
         iniView(view);
         getDataFromFirebase();
+        onBack();
     }
 
 
@@ -85,6 +87,7 @@ public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHot
         mHotelRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mHotelRecycler.setAdapter(mHotelAdapter);
         mHotelAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -93,6 +96,21 @@ public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHot
        Bundle bundle=new Bundle();
        bundle.putString("idHotel" ,id);
        hotelInformationFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotelInformationFragment).commit();
+       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotelInformationFragment).commit();
+
+    }
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                HomeFragment fragment=new HomeFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+
     }
 }

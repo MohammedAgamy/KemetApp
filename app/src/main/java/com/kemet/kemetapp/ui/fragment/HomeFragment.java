@@ -38,7 +38,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

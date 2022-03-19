@@ -1,7 +1,9 @@
 package com.kemet.kemetapp.ui;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.UiModeManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -129,6 +131,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
     private void changeThemes() {
 
         Dialog dialog = new Dialog(this);
@@ -158,6 +161,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        AlertDialog.Builder outDialog = new AlertDialog.Builder(this);
+        outDialog.setTitle("Do You Need Exit");
+        outDialog.setPositiveButton("Exit ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+
+    }
 }
 
 

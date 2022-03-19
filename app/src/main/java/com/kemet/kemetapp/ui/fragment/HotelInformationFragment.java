@@ -7,15 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,7 +26,7 @@ import com.smarteist.autoimageslider.SliderView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HotelInformationFragment extends Fragment implements View.OnClickListener {
+public class HotelInformationFragment extends Fragment implements View.OnClickListener  {
     FirebaseFirestore mFirestore;
     String idHotel;
 
@@ -40,7 +39,6 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     public HotelInformationFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,9 +61,10 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         mBtn_SelectRoom.setOnClickListener(this);
         mSliderView = view.findViewById(R.id.imageSlider);
 
-        getDataFromFireBase();
-        showImageSlider();
 
+        showImageSlider();
+        getDataFromFireBase();
+        onBack();
     }
 
     private void showImageSlider() {
@@ -101,18 +100,8 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
                     }
                 });
-
-
     }
 
-    /*
-    @Override
-    public void onPause() {
-        super.onPause();
-        HotielFragment hotielFragment = new HotielFragment();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, hotielFragment).commit();
-
-    }*/
 
     @Override
     public void onClick(View view) {
@@ -141,4 +130,5 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
 
     }
+
 }

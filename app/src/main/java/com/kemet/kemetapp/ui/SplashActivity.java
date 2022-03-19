@@ -17,13 +17,10 @@ import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.SaveUserData;
 
 public class SplashActivity extends AppCompatActivity {
-    //View in layout
-    ImageView mLogoSplash;
-    Animation mStartAnim;
+
     //fireBase
     FirebaseAuth mAuth;
 
-    UiModeManager mUiModeManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +29,9 @@ public class SplashActivity extends AppCompatActivity {
 
         iniView();
         handlerSplash();
-
-
-
     }
 
     private void iniView() {
-
-        //findView
-        mLogoSplash = findViewById(R.id.logoSplash);
-        //load anim logo
-        mStartAnim = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.logo_kemet_anim);
-        mLogoSplash.startAnimation(mStartAnim);
-
         //firebase
         mAuth = FirebaseAuth.getInstance();
     }
