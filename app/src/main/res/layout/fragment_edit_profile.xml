@@ -7,7 +7,7 @@
     tools:context=".ui.fragment.EditProfileFragment">
 
     <LinearLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/_50sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -54,13 +54,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/uaer_imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="2dp"
+            android:scaleType="fitXY"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="25dp"
-            android:src="@drawable/ic_baseline_edit_24"/>
+            android:src="@drawable/gamer"/>
 
 
 

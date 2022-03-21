@@ -7,7 +7,7 @@
     tools:context=".ui.fragment.ProfileFragment">
 
     <LinearLayout
-      android:layout_marginTop="30dp"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -29,36 +29,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="15dp"
-          android:layout_margin="30dp"
+            android:layout_margin="30dp"
             android:src="@drawable/ic_ed" />
     </LinearLayout>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="15dp"
+        android:src="@drawable/gamer"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="25dp"
-       />
+        android:layout_marginLeft="25dp" />
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Progress"
         android:layout_gravity="center_horizontal"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:background="@drawable/btn"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:layout_marginRight="10dp"
-        android:padding="15dp"
-        />
-
-
+        android:padding="15dp" />
 
 
     <TextView
@@ -69,10 +68,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:padding="15dp"
-        />
-
-
+        android:padding="15dp" />
 
 
     <TextView
@@ -83,9 +79,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:padding="15dp"
-        />
-
+        android:padding="15dp" />
 
 
     <TextView
@@ -96,13 +90,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:padding="15dp"
-        />
+        android:padding="15dp" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
         android:orientation="horizontal">
 
 
@@ -113,8 +107,7 @@
             android:background="@drawable/btn"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:padding="15dp"
-            />
+            android:padding="15dp" />
 
 
         <TextView
@@ -123,8 +116,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn"
             android:layout_marginTop="10dp"
-            android:padding="15dp"
-            />
+            android:padding="15dp" />
 
         <TextView
             android:id="@+id/year"
@@ -132,14 +124,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn"
             android:layout_marginTop="10dp"
-            android:padding="15dp"
-            />
+            android:padding="15dp" />
 
     </LinearLayout>
-
-
-
-
 
 
 </LinearLayout>

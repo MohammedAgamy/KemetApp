@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
 
 
 
-    private ImageView Image;
+    private ImageView Image, mEditProfile;
     private TextView Name;
     private TextView Phone;
     private TextView nationality;
@@ -75,7 +75,7 @@ public class ProfileFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
         //findviewbyid xml:
-        Image=view.findViewById(R.id.edit);
+        mEditProfile=view.findViewById(R.id.edit);
         Name = view.findViewById(R.id.Name);
         Phone = view.findViewById(R.id.phone);
         nationality = view.findViewById(R.id.nationality);
@@ -90,13 +90,12 @@ public class ProfileFragment extends Fragment {
         firestore= FirebaseFirestore.getInstance();
 
         //onclick back
-        Image.setOnClickListener(new View.OnClickListener() {
+        mEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              // Fragment fragment=new Fragment();
-             //  getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
-                startActivity(new Intent(getActivity(), EditProfileActivity.class));
-
+                EditProfileFragment fragment=new EditProfileFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
+               // startActivity(new Intent(getActivity(), EditProfileActivity.class));
             }
         });
 
@@ -152,10 +151,4 @@ public class ProfileFragment extends Fragment {
         loaddate();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivity().startActivity(new Intent(getActivity() , HomeActivity.class));
-
-    }
     }
