@@ -2,6 +2,7 @@ package com.kemet.kemetapp.ui.fragment;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -37,17 +38,11 @@ public class CarFragment extends Fragment implements CarAdapter.OnClickCar{
     public CarFragment() {
         // Required empty public constructor
     }
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_car, container, false);
-
-
     }
 
     @Override
@@ -63,6 +58,7 @@ public class CarFragment extends Fragment implements CarAdapter.OnClickCar{
         adapter=new CarAdapter(getActivity(),list,this);
         recyclerView.setAdapter(adapter);
         getData();
+        onBack();
 
     }
     private void getData(){
@@ -98,5 +94,21 @@ public class CarFragment extends Fragment implements CarAdapter.OnClickCar{
     public void onItemClick() {
         CarOrderFragment carOrderFragment=new CarOrderFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, carOrderFragment).commit();
+    }
+
+
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                HomeFragment carFragment=new HomeFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,carFragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+
     }
 }

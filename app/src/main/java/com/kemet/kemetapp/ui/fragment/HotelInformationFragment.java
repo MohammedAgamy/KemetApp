@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,14 +27,14 @@ import com.smarteist.autoimageslider.SliderView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HotelInformationFragment extends Fragment implements View.OnClickListener  {
+public class HotelInformationFragment extends Fragment implements View.OnClickListener {
     FirebaseFirestore mFirestore;
     String idHotel;
 
     TextView mHotel_Name;
     Button mBtn_SelectRoom;
     SliderView mSliderView;
-
+    Bundle bundle;
     int[] slideImage = {R.drawable.hotel6, R.drawable.hotel7, R.drawable.hotel8, R.drawable.hotel9};
 
     public HotelInformationFragment() {
@@ -51,8 +52,11 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         idHotel = (String) bundle.get("idHotel");
+
+
+
         //firebase
         mFirestore = FirebaseFirestore.getInstance();
         //View
@@ -87,9 +91,13 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
                             for (QueryDocumentSnapshot documentSnapshots : task.getResult()) {
                                 String id = documentSnapshots.getString("idhotel");
                                 String hotelName = documentSnapshots.getString("name");
-
-                                if (idHotel.equalsIgnoreCase(id)) {
+                                if (idHotel.equalsIgnoreCase(id))
+                                {
                                     mHotel_Name.setText(hotelName);
+                                }
+                                else {
+                                    HomeFragment fragment = new HomeFragment();
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
                                 }
                                 Log.d("taskTag", documentSnapshots.getId());
                             }
@@ -121,13 +129,12 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
-                HotielFragment fragment=new HotielFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
+                HotielFragment fragment = new HotielFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
             }
 
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
     }
 

@@ -1,7 +1,9 @@
 package com.kemet.kemetapp.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,13 +22,14 @@ import com.kemet.kemetapp.Adapter.HomeAdapter;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.CivilizationModel;
 import com.kemet.kemetapp.pojo.HomeModel;
+import com.kemet.kemetapp.ui.HomeActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CivilizationFragment extends Fragment implements CivilizationAdapter.OnClickCivilization{
+public class CivilizationFragment extends Fragment implements CivilizationAdapter.OnClickCivilization {
     //view
     RecyclerView mCivilizationRecycler;
 
@@ -42,7 +46,6 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,11 +58,11 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
         super.onViewCreated(view, savedInstanceState);
         iniView(view);
         getDataFromFirebase();
+        onBack();
     }
 
 
-    private void iniView(View view)
-    {
+    private void iniView(View view) {
 
         //View
         mCivilizationRecycler = view.findViewById(R.id.CivilizationHome);
@@ -71,9 +74,7 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
     }
 
 
-
-    private void getDataFromFirebase()
-    {
+    private void getDataFromFirebase() {
 
         mFireStore.collection("CivilizationItem").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -88,7 +89,7 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
                 });
 
 
-        mCivilizationAdapter = new CivilizationAdapter(getActivity(), mList,this);
+        mCivilizationAdapter = new CivilizationAdapter(getActivity(), mList, this);
         mCivilizationRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCivilizationRecycler.setAdapter(mCivilizationAdapter);
         mCivilizationAdapter.notifyDataSetChanged();
@@ -96,12 +97,26 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
 
     @Override
     public void onClickCivizItem(String id) {
-        civilizationInformationFragment civilizationInformationFragment=new civilizationInformationFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("civilizationFragment" ,id);
+        civilizationInformationFragment civilizationInformationFragment = new civilizationInformationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("civilizationFragment", id);
         civilizationInformationFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationInformationFragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, civilizationInformationFragment).commit();
 
+
+    }
+
+
+    private void onBack() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                HomeFragment homeFragment = new HomeFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
     }
 }

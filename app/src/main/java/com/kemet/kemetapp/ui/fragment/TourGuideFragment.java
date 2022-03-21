@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TourGuideFragment extends Fragment {
+public class TourGuideFragment extends Fragment implements TourGuideAdapter.OnTourGideClick {
     //view
     RecyclerView mTourGuideRecycler;
 
@@ -85,7 +85,7 @@ public class TourGuideFragment extends Fragment {
                 });
 
 
-        mTourGuideAdapter = new TourGuideAdapter(getActivity(), mList);
+        mTourGuideAdapter = new TourGuideAdapter(getActivity(), mList ,this);
         mTourGuideRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mTourGuideRecycler.setAdapter(mTourGuideAdapter);
         mTourGuideAdapter.notifyDataSetChanged();
@@ -93,10 +93,13 @@ public class TourGuideFragment extends Fragment {
 
     }
 
+
     @Override
-    public void onPause() {
-        super.onPause();
-        HomeFragment homeFragment=new HomeFragment();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,homeFragment).commit();
+    public void onTourGideClick(String id) {
+        TourGideOrderFragment tourGideOrderFragment = new TourGideOrderFragment();
+       // Bundle bundle = new Bundle();
+        //bundle.putString("TourGideFragment", id);
+        //tourGideOrderFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, tourGideOrderFragment).commit();
     }
 }

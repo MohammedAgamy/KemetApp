@@ -100,6 +100,9 @@ public class ShowAllRoomFragment extends Fragment implements RoomAdapter.OnClick
             public void handleOnBackPressed() {
 
                 HotelInformationFragment fragment=new HotelInformationFragment();
+                Bundle bundle=new Bundle();
+                bundle.putString("idHotel" ,"null");
+                fragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,fragment).commit();
             }
 

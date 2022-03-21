@@ -100,6 +100,7 @@ public class civilizationInformationFragment extends Fragment implements View.On
         mBtnGet_Location.setOnClickListener(this);
         getDataFromFireBase();
         showImageSlider();
+        onBack();
 
 
 
@@ -293,6 +294,9 @@ public class civilizationInformationFragment extends Fragment implements View.On
             public void handleOnBackPressed() {
 
                 CivilizationFragment civilizationFragment=new CivilizationFragment();
+                 Bundle bundle=new Bundle();
+                 bundle.putString("idHotel" ,"null");
+                 civilizationFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,civilizationFragment).commit();
             }
 

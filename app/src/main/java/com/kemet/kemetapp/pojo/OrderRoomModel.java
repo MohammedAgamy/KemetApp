@@ -5,12 +5,24 @@ public class OrderRoomModel {
     private String nationality ;
     private String startDate ;
     private String endDate ;
+    private String immagePass ;
+    private String location ;
 
-    public OrderRoomModel(String name, String nationality, String startDate, String endDate) {
+    public OrderRoomModel(String name, String nationality, String startDate, String endDate, String immagePass, String location) {
         this.name = name;
         this.nationality = nationality;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.immagePass = immagePass;
+        this.location = location;
+    }
+
+    public OrderRoomModel(String name, String nationality, String startDate, String endDate, String immagePass) {
+        this.name = name;
+        this.nationality = nationality;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.immagePass = immagePass;
     }
 
     public String getName() {
@@ -43,5 +55,20 @@ public class OrderRoomModel {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getImmagePass() {
+        return immagePass;
+    }
+
+    public void setImmagePass(String immagePass) {
+        this.immagePass = immagePass;
+    }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

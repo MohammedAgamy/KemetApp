@@ -1,18 +1,25 @@
 package com.kemet.kemetapp.ui.fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +37,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.kemet.kemetapp.Adapter.SliderAdapter;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.OrderRoomModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
@@ -52,9 +65,11 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
     private int[] slideImage = {R.drawable.car1, R.drawable.car2, R.drawable.car3, R.drawable.car4};
     private int cameraCode = 210;
     private String mName, mNationality, mImagePass, mStatDate, mEndDate;
-
+    private Uri resultUri;
 
     FirebaseFirestore mFirebaseFirestore;
+    private StorageReference storageReference;
+
 
     public CarOrderFragment() {
         // Required empty public constructor
@@ -74,6 +89,7 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
 
         iniView(view);
+        onBack();
     }
 
     private void onBack() {
@@ -105,6 +121,8 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
 
         mFirebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
 
         showImageSlider();
         showSpinner();
@@ -126,7 +144,7 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tackPhoto_car:
-                tackPassportPhoto();
+                checkPermission();
                 break;
             case R.id.selectStartData_car:
                 selectStartDate();
@@ -207,25 +225,60 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // to ask user to reade external storage
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+            } else {
+                tackPassportPhoto();
+            }
+        }
+    }
+
 
     private void tackPassportPhoto() {
-        Intent tackPhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (tackPhotoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(tackPhotoIntent, cameraCode);
-        } else {
-            Toast.makeText(getActivity(), "error open  ", Toast.LENGTH_SHORT).show();
-        }
+       // Toast.makeText(getActivity(), "open", Toast.LENGTH_SHORT).show();
+        CropImage.activity()
+                .start(getContext(), this);
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == cameraCode && resultCode == getActivity().RESULT_OK && data != null) {
-            Toast.makeText(getActivity(), "Don", Toast.LENGTH_SHORT).show();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                resultUri = result.getUri();
+                uPloadImage(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+
     }
+
+    private void uPloadImage(Uri resultUri) {
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        String userID=auth.getCurrentUser().getUid();
+        StorageReference ref = storageReference.child("CarPass").child(userID+ ".jpg");
+        // Log.d("userId" , userID);
+        ref.putFile(resultUri);
+
+
+        ref.getDownloadUrl().addOnCompleteListener(task -> {
+            Uri downloadUrl=  task.getResult();
+            mImagePass =  downloadUrl.toString();
+            Log.d("mImagepass" , mImagePass);
+        });
+
+    }
+
 
     private void selectStartDate() {
         MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
@@ -257,37 +310,42 @@ public class CarOrderFragment extends Fragment implements View.OnClickListener {
 
     private void uploadData() {
         mName = mUserName.getText().toString();
-        OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate);
-        mFirebaseFirestore.collection("UserInfoCar").document().set(orderRoomModel)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() && mImagePass != null) {
+            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate, mImagePass);
+            mFirebaseFirestore.collection("UserInfoCar").document().set(orderRoomModel)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
 
-                        if(task.isSuccessful())
-                        {
-                            Dialog dialog=new Dialog(getActivity());
-                            dialog.setContentView(R.layout.don_item);
-                            dialog.setTitle("Order Created");
-                            dialog.show();
+                            if (task.isSuccessful()) {
+                                Dialog dialog = new Dialog(getActivity());
+                                dialog.setContentView(R.layout.don_item);
+                                dialog.setTitle("Order Created");
+                                dialog.show();
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dialog.dismiss();
-                                    CarFragment carFragment=new CarFragment();
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, carFragment).commit();
-                                }
-                            },4000);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        CarFragment carFragment = new CarFragment();
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, carFragment).commit();
+                                    }
+                                }, 4000);
+                            } else {
+                                Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
-                        else
-                        {
-                            Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
+                    });
 
 
-
+        } else
+        {
+            Toast.makeText(getActivity(), "Enter Your Data", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
+
+
 }

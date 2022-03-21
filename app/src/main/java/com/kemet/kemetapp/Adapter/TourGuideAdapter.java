@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,10 +22,12 @@ import java.util.ArrayList;
 public class TourGuideAdapter extends RecyclerView.Adapter<TourGuideAdapter.TourGuideViewHolder> {
     Context mContext;
     ArrayList<TourGuideModel> mList;
+    OnTourGideClick onTourGideClick ;
 
-    public TourGuideAdapter(Context mContext, ArrayList<TourGuideModel> mList) {
+    public TourGuideAdapter(Context mContext, ArrayList<TourGuideModel> mList ,OnTourGideClick onTourGideClick) {
         this.mContext = mContext;
         this.mList = mList;
+        this.onTourGideClick=onTourGideClick;
     }
 
     @NonNull
@@ -42,6 +45,14 @@ public class TourGuideAdapter extends RecyclerView.Adapter<TourGuideAdapter.Tour
         holder.language.setText(mList.get(position).getLanguage());
 
         Glide.with(mContext).load(mList.get(position).getImage()).into(holder.tour_guid_image);
+
+
+        holder.mBtn_Order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTourGideClick.onTourGideClick(mList.get(position).getId());
+            }
+        });
     }
 
     @Override
@@ -53,6 +64,7 @@ public class TourGuideAdapter extends RecyclerView.Adapter<TourGuideAdapter.Tour
 
         ImageView tour_guid_image;
         TextView name, language;
+        Button mBtn_Order ;
 
 
         public TourGuideViewHolder(@NonNull @NotNull View itemView) {
@@ -60,9 +72,15 @@ public class TourGuideAdapter extends RecyclerView.Adapter<TourGuideAdapter.Tour
             tour_guid_image = itemView.findViewById(R.id.tour_guid_image);
             name = itemView.findViewById(R.id.tour_guid_name);
             language = itemView.findViewById(R.id.tour_guid_languege);
+            mBtn_Order=itemView.findViewById(R.id.tour_guid_btn_order);
 
 
         }
+    }
+
+    public interface OnTourGideClick
+    {
+         void onTourGideClick(String id);
     }
 
 }

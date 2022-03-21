@@ -2,15 +2,15 @@ package com.kemet.kemetapp.ui.fragment;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.drm.DrmStore;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.provider.MediaStore;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,13 +32,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,70 +58,105 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.transform.Result;
-
 import static android.app.Activity.RESULT_OK;
+import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
-public class RoomOrderFragment extends Fragment implements View.OnClickListener {
+public class TourGideOrderFragment extends Fragment implements View.OnClickListener {
+
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 200;
     private SliderView mSliderView;
     private AutoCompleteTextView TextInputLayout;
     private EditText mUserName;
-    private LinearLayout mTackPhoto, mSelectStartDate, mSelectEndDate;
+    private LinearLayout mTackPhoto, mSelectStartDate, mSelectEndDate, mTackLocation;
     private Button mUploadOrder_btn;
+    private ProgressBar mPrograssPar;
 
-    int[] slideImage = {R.drawable.hotel6, R.drawable.hotel7, R.drawable.hotel8, R.drawable.hotel9};
-    int cameraCode = 220;
-    String mName, mNationality, mImagePass, mStatDate, mEndDate;
-    Uri resultUri;
+
+    private int[] slideImage = {R.drawable.car1, R.drawable.hotel7, R.drawable.c2, R.drawable.c4};
+    private int cameraCode = 210;
+    private String mName, mNationality, mImagePass, mStatDate, mEndDate;
+    private Uri resultUri;
+    String startLocation;
 
     FirebaseFirestore mFirebaseFirestore;
     private StorageReference storageReference;
 
+    LocationManager locationManager = null;
+    com.google.android.gms.location.LocationRequest locationRequest;
 
 
-    public RoomOrderFragment() {
+    public TourGideOrderFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_room_order, container, false);
+        return inflater.inflate(R.layout.fragment_tour_gide_order, container, false);
     }
 
-
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSliderView = view.findViewById(R.id.imageSlider_r);
-        TextInputLayout = view.findViewById(R.id.spinnerView);
-        mUserName = view.findViewById(R.id.enterName_roomOrder);
-        mTackPhoto = view.findViewById(R.id.tackPhoto);
+
+        iniView(view);
+
+    }
+
+    private void iniView(View view) {
+        mSliderView = view.findViewById(R.id.imageSlider_tour);
+        TextInputLayout = view.findViewById(R.id.spinnerView_tour);
+        mUserName = view.findViewById(R.id.enterName_tour);
+        mTackPhoto = view.findViewById(R.id.tackPhoto_tour);
         mTackPhoto.setOnClickListener(this);
-        mSelectStartDate = view.findViewById(R.id.selectStartData);
+        mSelectStartDate = view.findViewById(R.id.selectStartData_t);
         mSelectStartDate.setOnClickListener(this);
-        mSelectEndDate = view.findViewById(R.id.selectEndData);
+        mSelectEndDate = view.findViewById(R.id.selectEndData_t);
         mSelectEndDate.setOnClickListener(this);
-        mUploadOrder_btn = view.findViewById(R.id.btn_select_room);
+        mUploadOrder_btn = view.findViewById(R.id.btn_select_tour);
         mUploadOrder_btn.setOnClickListener(this);
+        mTackLocation = view.findViewById(R.id.tackUserLocation);
+        mTackLocation.setOnClickListener(this);
+        mPrograssPar = view.findViewById(R.id.progras_tour);
 
 
         mFirebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+
         showImageSlider();
         showSpinner();
-        onBack();
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tackPhoto_tour:
+                checkPermission();
+                break;
+            case R.id.selectStartData_t:
+                selectStartDate();
+                break;
+            case R.id.selectEndData_t:
+                selectEndDate();
+
+                break;
+
+            case R.id.btn_select_tour:
+                uploadData();
+                break;
+
+            case R.id.tackUserLocation:
+                getCurrentLocation();
+                break;
+        }
     }
 
 
@@ -205,7 +248,7 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
 
     private void tackPassportPhoto() {
-        Toast.makeText(getActivity(), "open", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getActivity(), "open", Toast.LENGTH_SHORT).show();
         CropImage.activity()
                 .start(getContext(), this);
 
@@ -220,6 +263,8 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
+                Toast.makeText(getContext(), "Photo Tacked Don", Toast.LENGTH_SHORT).show();
+
                 uPloadImage(resultUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -228,30 +273,34 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
     }
 
+
     private void uPloadImage(Uri resultUri) {
-        FirebaseAuth auth=FirebaseAuth.getInstance();
-        String userID=auth.getCurrentUser().getUid();
-        StorageReference ref = storageReference.child("RoomOrder").child(userID+ ".jpg");
-       // Log.d("userId" , userID);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userID = auth.getCurrentUser().getUid();
+        StorageReference ref = storageReference.child("orderTourGidePass").child(userID + ".jpg");
+        // Log.d("userId" , userID);
         ref.putFile(resultUri);
 
-
-       ref.getDownloadUrl().addOnCompleteListener(task -> {
-           Uri downloadUrl=  task.getResult();
-            mImagePass =  downloadUrl.toString();
-            Log.d("mImagepass" , mImagePass);
-       });
+        ref.getDownloadUrl().addOnCompleteListener(task -> {
+            Uri downloadUrl = task.getResult();
+            mImagePass = downloadUrl.toString();
+            Log.d("mImagepass", mImagePass);
+        });
 
     }
-
 
 
     private void selectStartDate() {
         MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
         MaterialDatePicker materialDatePicker = materialBuilder.build();
+
         materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
+
+
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
                 mStatDate = materialDatePicker.getHeaderText());
+
+
     }
 
 
@@ -259,21 +308,25 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
 
         MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();
         MaterialDatePicker materialDatePicker = materialBuilder.build();
+
         materialDatePicker.show(getActivity().getSupportFragmentManager(), "");
+
+
         materialDatePicker.addOnPositiveButtonClickListener(selection ->
                 mEndDate = materialDatePicker.getHeaderText());
 
     }
 
-    private void uploadData() {
 
+    private void uploadData() {
         mName = mUserName.getText().toString();
-        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() && mImagePass != null) {
-            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality,mStatDate, mEndDate,mImagePass);
-            mFirebaseFirestore.collection("UserInfoRoom").document().set(orderRoomModel)
+        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() && mImagePass != null && startLocation != null) {
+            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate, mImagePass, startLocation);
+            mFirebaseFirestore.collection("UserInfTourGide").document().set(orderRoomModel)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+
                             if (task.isSuccessful()) {
                                 Dialog dialog = new Dialog(getActivity());
                                 dialog.setContentView(R.layout.don_item);
@@ -283,14 +336,15 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ShowAllRoomFragment roomFragment = new ShowAllRoomFragment();
-                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, roomFragment).commit();
                                         dialog.dismiss();
+                                        HomeFragment homeFragment = new HomeFragment();
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
                                     }
                                 }, 4000);
                             } else {
                                 Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
                             }
+
                         }
                     });
 
@@ -298,39 +352,101 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
         } else {
             Toast.makeText(getActivity(), "Enter Your Data", Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    private void onBack() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
+    public void getCurrentLocation() {
+        locationRequest = com.google.android.gms.location.LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
-                ShowAllRoomFragment fragment = new ShowAllRoomFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+            if (isGPSEnabled()) {
+                LocationServices.getFusedLocationProviderClient(getActivity())
+                        .requestLocationUpdates(locationRequest, new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+                                mPrograssPar.getPaddingStart();
+                                mPrograssPar.setVisibility(View.VISIBLE);
+                                if (locationResult != null) {
+
+                                    int index = locationResult.getLocations().size() - 1;
+                                    startLocation = locationResult.getLocations().get(index).getLatitude() + "," + locationResult.getLocations().get(index).getLongitude();
+                                    // endLocation = "29.98646413043888, 31.12975354178391";
+                                    Toast.makeText(getContext(), "Location Don", Toast.LENGTH_SHORT).show();
+                                    mPrograssPar.setVisibility(View.INVISIBLE);
+                                    //Log.d("loca", startLocation);
+                                } else {
+                                    Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+
+                        }, Looper.getMainLooper());
+            } else {
+                turnOnGPS();
             }
 
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tackPhoto:
-                checkPermission();
-                break;
-            case R.id.selectStartData:
-                selectStartDate();
-                break;
-            case R.id.selectEndData:
-                selectEndDate();
-                break;
-            case R.id.btn_select_room:
-                uploadData();
-                break;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
         }
+
     }
+
+    private boolean isGPSEnabled() {
+        boolean isEnabled = false;
+        if (locationManager == null) {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+
+    }
+
+    private void turnOnGPS() {
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getActivity())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Toast.makeText(getActivity(), "GPS is already tured on", Toast.LENGTH_SHORT).show();
+
+                } catch (ApiException e) {
+
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                            try {
+                                ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                                resolvableApiException.startResolutionForResult(getActivity(), 2);
+                            } catch (IntentSender.SendIntentException ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Device does not have location
+                            break;
+                    }
+                }
+            }
+        });
+
+    }
+
 }

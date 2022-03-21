@@ -102,19 +102,28 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick {
     @Override
     public void onClick_Home(String s) {
         if (s.equalsIgnoreCase("0")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_hotielFragment);
+
+            HotielFragment hotielFragment=new HotielFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment , hotielFragment).commit();
+            //Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_hotielFragment);
 
         }
         if (s.equalsIgnoreCase("1")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_tourGuideFragment);
+            TourGuideFragment tourGuideFragment=new TourGuideFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment , tourGuideFragment).commit();
+            //Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_tourGuideFragment);
 
         }
 
         if (s.equalsIgnoreCase("2")) {
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_civilizationFragment);
+            CivilizationFragment civilizationFragment=new CivilizationFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment , civilizationFragment).commit();
+            //Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_civilizationFragment);
 
         }
         if (s.equalsIgnoreCase("3")) {
+            CarFragment carFragment=new CarFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment , carFragment).commit();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_carFragment);
 
         }

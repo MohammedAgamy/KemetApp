@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mNavigationDrawer.close();
 
     }
-
+/*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -174,8 +174,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+       // outDialog.show();
 
     }
+    */
+
 }
 
 

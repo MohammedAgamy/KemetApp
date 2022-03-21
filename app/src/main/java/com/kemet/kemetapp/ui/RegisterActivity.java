@@ -1,14 +1,21 @@
 package com.kemet.kemetapp.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +41,7 @@ import com.kemet.kemetapp.pojo.SaveUserData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -45,6 +53,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     LinearLayout mParent;
     LottieAnimationView mWaiteAnim;
     ImageView mBack_Login, mBtn_Login, mBtnGoogle;
+    private AutoCompleteTextView TextInputLayout;
+    String mNationality;
+
 
     //firebase
     FirebaseAuth mAuth;
@@ -75,6 +86,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mBtn_Login.setOnClickListener(this);
         mBtnGoogle = findViewById(R.id.googleRegister);
         mBtnGoogle.setOnClickListener(this);
+        TextInputLayout = findViewById(R.id.spinnerView);
+        TextInputLayout.setOnClickListener(this);
+
         //FireBase
         mAuth = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
@@ -95,7 +109,74 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.googleRegister:
                 signInWithGoogle();
                 break;
+            case R.id.spinnerView:
+                showSpinner();
+                break;
         }
+    }
+
+    private void showSpinner() {
+
+        ArrayList<String> mList = new ArrayList<>();
+
+        mList.add("Egypt");
+        mList.add("Belize");
+        mList.add("Argentina");
+        mList.add("Armenia");
+        mList.add("Austria");
+        mList.add("Germany");
+        mList.add("India");
+        mList.add("Japan");
+        mList.add("Mexico");
+
+        TextInputLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Dialog dialog = new Dialog(RegisterActivity.this);
+                dialog.setContentView(R.layout.cstoum_spiner);
+                dialog.getWindow().setLayout(1000, 800);
+                dialog.show();
+
+                EditText enterNationality = dialog.findViewById(R.id.enterNationality);
+                ListView mListNationality = dialog.findViewById(R.id.listNationality);
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(RegisterActivity.this, android.R.layout.simple_list_item_1, mList);
+                mListNationality.setAdapter(arrayAdapter);
+
+                enterNationality.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        arrayAdapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+
+                mListNationality.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mNationality = arrayAdapter.getItem(position);
+                        dialog.dismiss();
+
+                    }
+                });
+            }
+
+
+        });
+
+
     }
 
     private void register() {
@@ -183,6 +264,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setData.put("email", email);
         setData.put("password", null);
         setData.put("userId", id);
+        setData.put("nationality", mNationality);
         fireStore.collection("UsersData").document(id).set(setData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
