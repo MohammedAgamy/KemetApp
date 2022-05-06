@@ -70,10 +70,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:fitsSystemWindows="true"
-
             >
-
-
             <include layout="@layout/nav_menu" />
         </com.google.android.material.navigation.NavigationView>
 

@@ -68,7 +68,7 @@ public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHot
 
     }
 
-    private void getDataFromFirebase() {
+    public void getDataFromFirebase() {
 
         mFireStore.collection("HotelItem").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -92,13 +92,18 @@ public class  HotielFragment extends Fragment implements HotelAdapter.OnClickHot
 
     @Override
     public void onClickHotelItem(String id) {
-       HotelInformationFragment hotelInformationFragment=new HotelInformationFragment();
-       Bundle bundle=new Bundle();
-       bundle.putString("idHotel" ,id);
-       hotelInformationFragment.setArguments(bundle);
-       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotelInformationFragment).commit();
+        HotelInformationFragment hotelInformationFragment=new HotelInformationFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("idHotel" ,id);
+        hotelInformationFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,hotelInformationFragment).commit();
 
     }
+
+
+
+
+
 
     private void onBack() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {

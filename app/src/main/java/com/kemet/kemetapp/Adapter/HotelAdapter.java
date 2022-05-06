@@ -50,11 +50,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelItem> {
         Glide.with(mContext).load(mList.get(position).getRate()).into(holder.imgRating);
 
         holder.itemView.setOnClickListener(view -> {
-
             onClickHotel.onClickHotelItem(mList.get(position).getId());
-
-
-
         });
 
     }

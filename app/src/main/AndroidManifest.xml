@@ -35,9 +35,6 @@
             android:name=".ui.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".EditProfileActivity"
-            android:configChanges="uiMode" />
-        <activity
             android:name=".ui.HomeActivity"
             android:configChanges="uiMode" />
         <activity

@@ -1,9 +1,7 @@
 package com.kemet.kemetapp.ui;
 
-import android.app.AlertDialog;
+
 import android.app.Dialog;
-import android.app.UiModeManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,11 +9,9 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,10 +27,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     HomeFragment homeFragment;
     LinearLayout mBtnProfile, mBtnThemes, mLogOut;
     BottomNavigationView mBottomNavigationView;
-
-
-    UiModeManager mUiModeManager;
-
     FirebaseAuth mAuth;
 
     @Override
@@ -64,8 +56,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         profileFragment = new ProfileFragment();
         homeFragment = new HomeFragment();
-
-
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -76,7 +66,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.icon_profiel:
                 ///got to profile
-                //الذهاب الى شاشة البروفيل فرجمنت (intent)
                 mBtnProfile.setBackgroundResource(R.color.linermenu);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFragment).commit();
                 mNavigationDrawer.close();
@@ -105,7 +94,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mOpenMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //فتح النافجيشن من الشمال
                 mNavigationDrawer.openDrawer(Gravity.LEFT);
 
             }

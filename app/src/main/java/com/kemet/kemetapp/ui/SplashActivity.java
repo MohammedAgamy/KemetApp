@@ -32,13 +32,11 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void iniView() {
-        //firebase
+        //firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
-
     //methodSplash
     public void handlerSplash() {
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

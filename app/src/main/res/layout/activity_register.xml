@@ -180,21 +180,25 @@
                     android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/btn_google" />
-                <!--facebook SignUp -->
+
+                <!--
+
                 <ImageView
                     android:id="@+id/faceBookRegister"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/facebook" />
-                <!--twitter SignUp -->
+
                 <ImageView
                     android:id="@+id/twitterRegister"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/twitter" />
+                       -->
             </LinearLayout>
+
         </LinearLayout>
 
         <!--go to login activity -->

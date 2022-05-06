@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -39,10 +38,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.kemet.kemetapp.EditProfileActivity;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.UserInfoModel;
-import com.kemet.kemetapp.ui.HomeActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.HashMap;
@@ -180,7 +177,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     //   String day = documentSnapshot.getString(KEY_Day);
                     //   String month = documentSnapshot.getString(KEY_Month);
                     //   String year = documentSnapshot.getString(KEY_Year);
-
 
                     Name.setText(name);
                     Phone.setText(phone);

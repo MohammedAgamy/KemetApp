@@ -1,12 +1,14 @@
 package com.kemet.kemetapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -37,11 +39,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
         this.homeOnClick = homeOnClick;
     }
 
-    public HomeAdapter(Context mContext, List<HomeModel> mList) {
-        this.mContext = mContext;
-        this.mList = mList;
-
-    }
 
 
     @Override
@@ -53,27 +50,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull item holder, int position) {
-        mHomeModel = new HomeModel();
         holder.name.setText(mList.get(position).getName());
         Glide.with(mContext).load(mList.get(position).getImage()).into(holder.img);
 
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (position == 0) {
-                    homeOnClick.onClick_Home("0");
-                } else if (position == 1) {
-                    homeOnClick.onClick_Home("1");
+        holder.itemView.setOnClickListener(view -> {
+            if (position == 0) {
+                homeOnClick.onClick_Home("0");
+            } else if (position == 1) {
+                homeOnClick.onClick_Home("1");
+            } else if (position == 2) {
+                homeOnClick.onClick_Home("2");
 
-                } else if (position == 2) {
-                    homeOnClick.onClick_Home("2");
+            } else if (position == 3) {
+                homeOnClick.onClick_Home("3");
 
-                } else if (position == 3) {
-                    homeOnClick.onClick_Home("3");
-
-                }
             }
         });
 
@@ -88,11 +80,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
     class item extends RecyclerView.ViewHolder {
         TextView name;
         ImageView img;
-
-
         public item(View itemView) {
             super(itemView);
-
             name = itemView.findViewById(R.id.text_item);
             img = itemView.findViewById(R.id.image_item);
         }
@@ -101,6 +90,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
 
    public interface HomeOnClick {
         void onClick_Home(String s);
-       void onItemClick(String pos);
    }
+
+
+
 }
+

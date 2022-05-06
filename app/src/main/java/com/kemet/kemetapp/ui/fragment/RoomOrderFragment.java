@@ -76,8 +76,6 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
     FirebaseFirestore mFirebaseFirestore;
     private StorageReference storageReference;
 
-
-
     public RoomOrderFragment() {
         // Required empty public constructor
     }

@@ -100,12 +100,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnregister:
                 register();
                 break;
-
             case R.id.gologin_register:
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 finish();
                 break;
-
             case R.id.googleRegister:
                 signInWithGoogle();
                 break;
@@ -115,10 +113,159 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+
+
+    // start create user with email and password
+    private void register() {
+        //get data from user
+        String name = mName.getText().toString().trim();
+        String email = mEmail.getText().toString().trim();
+        String password = mPassword.getText().toString().trim();
+        //check data
+        if (validation(email, password, name)) {
+            inVisibilty();
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            mWaiteAnim.setVisibility(View.GONE);
+                            //startActivity
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            finish();
+                            //get id
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String id = user.getUid();
+                            // upLoud data to fireStore
+                            upLoudUserData(name, email, password, id);
+                            Snackbar.make(findViewById(android.R.id.content), " User Created.. " + id, Snackbar.LENGTH_LONG).show();
+
+                        } else {
+                            mWaiteAnim.setVisibility(View.GONE);
+                            mParent.setVisibility(View.VISIBLE);
+                            Snackbar.make(findViewById(android.R.id.content), " Check Your Internet.. ", Snackbar.LENGTH_LONG).show();
+
+                        }
+                    });
+
+        }
+
+
+        //auth with firebase
+
+
+    }
+
+
+    //METHOD check data from user
+    private boolean validation(String email, String password, String name) {
+        if (name.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), " Your Name is Empty", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (email.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), " Your Email is Empty", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Snackbar.make(findViewById(android.R.id.content), " Check Your Email ", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (password.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), " Your Password is Empty", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (password.length() < 6) {
+            Snackbar.make(findViewById(android.R.id.content), " Your Password is Short", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+
+    //Visible View when user wait
+    private void inVisibilty() {
+        mWaiteAnim.setVisibility(View.VISIBLE);
+        mParent.setVisibility(View.GONE);
+    }
+
+    //Upload Data to firebase Firestor
+    private void upLoudUserData(String name, String email, String password, String id) {
+        //save data in shared
+        SaveUserData saveUserData = new SaveUserData(this);
+        saveUserData.SaveData(name, email, true);
+        HashMap<String, Object> setData = new HashMap<>();
+        setData.put("name", name);
+        setData.put("email", email);
+        setData.put("password", null);
+        setData.put("userId", id);
+        setData.put("nationality", mNationality);
+        fireStore.collection("UsersData").document(id).set(setData);
+    }
+
+
+    //Auth by google
+    public void signInWithGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = GoogleSignIn.getClient(this, gso);
+
+        Intent signInIntent = mGoogleApiClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                firebaseAuthWithGoogle(account.getIdToken());
+
+            } catch (ApiException e) {
+                Log.w(TAG, "Google sign in failed", e);
+
+            }
+
+
+        }
+    }
+
+
+    //تسجيل مستخدم ب الاميل
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                            finish();
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+
+                        }
+                    }
+                });
+
+    }
+
+
+
     private void showSpinner() {
-
         ArrayList<String> mList = new ArrayList<>();
-
         mList.add("Egypt");
         mList.add("Belize");
         mList.add("Argentina");
@@ -133,7 +280,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
 
-
+                //create dialog
                 Dialog dialog = new Dialog(RegisterActivity.this);
                 dialog.setContentView(R.layout.cstoum_spiner);
                 dialog.getWindow().setLayout(1000, 800);
@@ -142,9 +289,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 EditText enterNationality = dialog.findViewById(R.id.enterNationality);
                 ListView mListNationality = dialog.findViewById(R.id.listNationality);
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(RegisterActivity.this, android.R.layout.simple_list_item_1, mList);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+                        (RegisterActivity.this, android.R.layout.simple_list_item_1, mList);
                 mListNationality.setAdapter(arrayAdapter);
-
                 enterNationality.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,162 +326,4 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void register() {
-
-        //get data from user
-        String name = mName.getText().toString().trim();
-        String email = mEmail.getText().toString().trim();
-        String password = mPassword.getText().toString().trim();
-        //check data
-        if (validation(email, password, name)) {
-            inVisibilty();
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            mWaiteAnim.setVisibility(View.GONE);
-                            //startActivity
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            finish();
-                            //get id
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String id = user.getUid();
-                            upLoudUserData(name, email, password, id);
-
-                            Snackbar.make(findViewById(android.R.id.content), " User Created.. " + id, Snackbar.LENGTH_LONG).show();
-
-                        } else {
-                            mWaiteAnim.setVisibility(View.GONE);
-                            mParent.setVisibility(View.VISIBLE);
-                            Snackbar.make(findViewById(android.R.id.content), " Check Your Internet.. ", Snackbar.LENGTH_LONG).show();
-
-                        }
-                    });
-
-        }
-
-
-        //auth with firebase
-
-
-    }
-
-
-    //METHOD check data
-    private boolean validation(String email, String password, String name) {
-        if (name.isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), " Your Name is Empty", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        if (email.isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), " Your Email is Empty", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Snackbar.make(findViewById(android.R.id.content), " Check Your Email ", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        if (password.isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), " Your Password is Empty", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        if (password.length() < 6) {
-            Snackbar.make(findViewById(android.R.id.content), " Your Password is Short", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-
-        return true;
-    }
-
-
-    //Visible View
-    private void inVisibilty() {
-        mWaiteAnim.setVisibility(View.VISIBLE);
-        mParent.setVisibility(View.GONE);
-    }
-
-    //رفع بيانات المستخدم
-    //Upload Data to firebase Firestor
-    private void upLoudUserData(String name, String email, String password, String id) {
-        //save data in shared
-        SaveUserData saveUserData = new SaveUserData(this);
-        saveUserData.SaveData(name, email, true);
-
-        HashMap<String, Object> setData = new HashMap<>();
-        setData.put("name", name);
-        setData.put("email", email);
-        setData.put("password", null);
-        setData.put("userId", id);
-        setData.put("nationality", mNationality);
-        fireStore.collection("UsersData").document(id).set(setData).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-            }
-
-        });
-
-    }
-
-
-    //تسجيل مستخدم بجوجل
-    public void signInWithGoogle() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleApiClient = GoogleSignIn.getClient(this, gso);
-
-        Intent signInIntent = mGoogleApiClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
-
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                firebaseAuthWithGoogle(account.getIdToken());
-
-            } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
-
-            }
-
-
-        }
-    }
-
-
-    //تسجيل مستخدم ب الاميل
-    private void firebaseAuthWithGoogle(String idToken) {
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                            finish();
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-                        }
-                    }
-                });
-
-    }
 }
