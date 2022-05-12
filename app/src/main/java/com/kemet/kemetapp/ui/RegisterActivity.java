@@ -114,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     // start create user with email and password
     private void register() {
         //get data from user
@@ -222,21 +221,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
-
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-
             }
-
-
         }
     }
-
 
     //تسجيل مستخدم ب الاميل
     private void firebaseAuthWithGoogle(String idToken) {
@@ -263,7 +256,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     private void showSpinner() {
         ArrayList<String> mList = new ArrayList<>();
         mList.add("Egypt");
@@ -276,51 +268,46 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mList.add("Japan");
         mList.add("Mexico");
 
-        TextInputLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        TextInputLayout.setOnClickListener(v -> {
 
-                //create dialog
-                Dialog dialog = new Dialog(RegisterActivity.this);
-                dialog.setContentView(R.layout.cstoum_spiner);
-                dialog.getWindow().setLayout(1000, 800);
-                dialog.show();
+            //create dialog
+            Dialog dialog = new Dialog(RegisterActivity.this);
+            dialog.setContentView(R.layout.cstoum_spiner);
+            dialog.getWindow().setLayout(1000, 800);
+            dialog.show();
 
-                EditText enterNationality = dialog.findViewById(R.id.enterNationality);
-                ListView mListNationality = dialog.findViewById(R.id.listNationality);
+            EditText enterNationality = dialog.findViewById(R.id.enterNationality);
+            ListView mListNationality = dialog.findViewById(R.id.listNationality);
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
-                        (RegisterActivity.this, android.R.layout.simple_list_item_1, mList);
-                mListNationality.setAdapter(arrayAdapter);
-                enterNationality.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+                    (RegisterActivity.this, android.R.layout.simple_list_item_1, mList);
+            mListNationality.setAdapter(arrayAdapter);
+            enterNationality.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        arrayAdapter.getFilter().filter(s);
-                    }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    arrayAdapter.getFilter().filter(s);
+                }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-                    }
-                });
+                }
+            });
 
 
-                mListNationality.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mNationality = arrayAdapter.getItem(position);
-                        dialog.dismiss();
+            mListNationality.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    mNationality = arrayAdapter.getItem(position);
+                    dialog.dismiss();
 
-                    }
-                });
-            }
-
-
+                }
+            });
         });
 
 

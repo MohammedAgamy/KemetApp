@@ -31,7 +31,6 @@ public class CivilizationAdapter extends RecyclerView.Adapter<CivilizationAdapte
         this.mList = mList;
         this.onClickCivilization=onClickCivilization ;
 
-
     }
 
     @NonNull

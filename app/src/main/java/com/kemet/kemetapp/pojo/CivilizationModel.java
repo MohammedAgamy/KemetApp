@@ -4,6 +4,7 @@ public class CivilizationModel {
     private String name ;
     private String image ;
     private String id ;
+    private String typeId ;
     private  String timestamp;
 
 
@@ -35,5 +36,11 @@ public class CivilizationModel {
         this.id = id;
     }
 
+    public String getTypeId() {
+        return typeId;
+    }
 
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
 }

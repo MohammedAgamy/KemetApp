@@ -51,23 +51,22 @@ import com.smarteist.autoimageslider.SliderView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class civilizationInformationFragment extends Fragment implements View.OnClickListener    {
+public class civilizationInformationFragment extends Fragment implements View.OnClickListener {
 
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 2000 ;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 2000;
     FirebaseFirestore mFirestore;
     DocumentReference documentReference;
     String mIdCiv, mAboutPaceFromFireBase;
 
     TextView mCiv_Name, mAboutPlace;
     SliderView mSliderView;
-    LinearLayout mBtnGet_Location ;
-    String startLocation ,endLocation ;
+    LinearLayout mBtnGet_Location;
+    String startLocation, endLocation;
     LocationManager locationManager = null;
 
 
-
     //FireBase
-    com.google.android.gms.location.LocationRequest locationRequest ;
+    com.google.android.gms.location.LocationRequest locationRequest;
 
     int[] slideImage = {R.drawable.c1, R.drawable.c2, R.drawable.c3, R.drawable.c4};
 
@@ -96,13 +95,11 @@ public class civilizationInformationFragment extends Fragment implements View.On
         mCiv_Name = view.findViewById(R.id.civ_name_inf);
         mSliderView = view.findViewById(R.id.imageSlider_civ);
         mAboutPlace = view.findViewById(R.id.civ_text_inf);
-        mBtnGet_Location=view.findViewById(R.id.civ_location_inf);
+        mBtnGet_Location = view.findViewById(R.id.civ_location_inf);
         mBtnGet_Location.setOnClickListener(this);
         getDataFromFireBase();
         showImageSlider();
         onBack();
-
-
 
 
     }
@@ -126,7 +123,7 @@ public class civilizationInformationFragment extends Fragment implements View.On
                                 String id = documentSnapshots.getString("idCiv");
                                 String civName = documentSnapshots.getString("name");
                                 mAboutPaceFromFireBase = documentSnapshots.getString("aboutPlace");
-                                endLocation=documentSnapshots.getString("location");
+                                endLocation = documentSnapshots.getString("location");
 
                                 if (mIdCiv.equalsIgnoreCase(id)) {
                                     mCiv_Name.setText(civName);
@@ -145,47 +142,44 @@ public class civilizationInformationFragment extends Fragment implements View.On
     }
 
 
-
-
     //Location
-    public  void getCurrentLocation() {
+    public void getCurrentLocation() {
         locationRequest = com.google.android.gms.location.LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) {
 
-                if (isGPSEnabled()) {
-                    LocationServices.getFusedLocationProviderClient(getActivity())
-                            .requestLocationUpdates(locationRequest, new LocationCallback() {
-                                @Override
-                                public void onLocationResult(@NonNull LocationResult locationResult) {
-                                    super.onLocationResult(locationResult);
-                                    if (locationResult != null) {
-                                        int index = locationResult.getLocations().size() - 1;
-                                        startLocation = locationResult.getLocations().get(index).getLatitude() + "," + locationResult.getLocations().get(index).getLongitude();
-                                       // endLocation = "29.98646413043888, 31.12975354178391";
-                                        Log.d("loca", startLocation);
-                                        showLocation(startLocation, endLocation);
-                                    } else {
-                                        Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
+            if (isGPSEnabled()) {
+                LocationServices.getFusedLocationProviderClient(getActivity())
+                        .requestLocationUpdates(locationRequest, new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+                                if (locationResult != null) {
+                                    int index = locationResult.getLocations().size() - 1;
+                                    startLocation = locationResult.getLocations().get(index).getLatitude() + "," + locationResult.getLocations().get(index).getLongitude();
+                                    // endLocation = "29.98646413043888, 31.12975354178391";
+                                    Log.d("loca", startLocation);
+                                    showLocation(startLocation, endLocation);
+                                } else {
+                                    Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
 
-                                    }
                                 }
+                            }
 
 
-                            }, Looper.getMainLooper());
-                } else {
-                    turnOnGPS();
-                }
-
+                        }, Looper.getMainLooper());
+            } else {
+                turnOnGPS();
             }
-        else
-        {
+
+        } else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);        }
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
 
     }
 
@@ -193,12 +187,9 @@ public class civilizationInformationFragment extends Fragment implements View.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == MY_PERMISSIONS_REQUEST_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getCurrentLocation();
-        }
-        else
-        {
+        } else {
             Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
 
         }
@@ -244,7 +235,6 @@ public class civilizationInformationFragment extends Fragment implements View.On
                                 ex.printStackTrace();
                             }
                             break;
-
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             //Device does not have location
                             break;
@@ -255,22 +245,19 @@ public class civilizationInformationFragment extends Fragment implements View.On
 
     }
 
-    private void showLocation(String startLocation , String endLocation) {
+    private void showLocation(String startLocation, String endLocation) {
 
 
         try {
-            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" +startLocation +"/"+endLocation);
+            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + startLocation + "/" + endLocation);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.setPackage("com.google.android.apps.maps");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
-        }
-
-        catch (ActivityNotFoundException exception)
-        {
-            Uri uri =Uri.parse("https://play.google.com/store/");
-            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        } catch (ActivityNotFoundException exception) {
+            Uri uri = Uri.parse("https://play.google.com/store/");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -280,8 +267,7 @@ public class civilizationInformationFragment extends Fragment implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.civ_location_inf:
                 getCurrentLocation();
                 break;
@@ -293,15 +279,15 @@ public class civilizationInformationFragment extends Fragment implements View.On
             @Override
             public void handleOnBackPressed() {
 
-                CivilizationFragment civilizationFragment=new CivilizationFragment();
-                 Bundle bundle=new Bundle();
-                 bundle.putString("idHotel" ,"null");
-                 civilizationFragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment ,civilizationFragment).commit();
+                CivilizationFragment civilizationFragment = new CivilizationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("idHotel", "null");
+                civilizationFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, civilizationFragment).commit();
             }
 
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity() , callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
     }
 

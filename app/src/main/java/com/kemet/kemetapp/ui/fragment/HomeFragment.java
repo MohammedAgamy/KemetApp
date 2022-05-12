@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,29 +20,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kemet.kemetapp.Adapter.HomeAdapter;
+import com.kemet.kemetapp.Adapter.TypeTorusimAdapter;
 import com.kemet.kemetapp.R;
 import com.kemet.kemetapp.pojo.HomeModel;
-import com.kemet.kemetapp.ui.RegisterActivity;
+import com.kemet.kemetapp.pojo.TourismModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, DataHome {
+public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,TypeTorusimAdapter.OnClickType {
 
     //view
     RecyclerView mHomeRecycler;
     //Model
     List<HomeModel> mList;
-    ArrayList<String> mTourList;
+    ArrayList<TourismModel> mTourList;
     HomeAdapter mHomeAdapter;
     PresenterHome presenterHome;
     //Firebase
     FirebaseFirestore mFireStore;
     //
-    String getData;
-
+    String getName, getId;
+    Dialog dialog ;
     public HomeFragment() {
         // Required empty public constructor
 
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
 
         iniView(view);
         getDataFromFirebase();
-        presenterHome.getData();
+        //presenterHome.getData();
     }
 
 
@@ -82,7 +83,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
         //Firebase
         mFireStore = FirebaseFirestore.getInstance();
         //mvp
-        presenterHome = new PresenterHome(this);
+        //presenterHome = new PresenterHome(this);
         // getDataFromFirebase();
 
     }
@@ -147,15 +148,18 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
     private void openDialog() {
 
         //create dialog
-        Dialog dialog = new Dialog(getActivity());
+         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_tourism);
         dialog.getWindow().setLayout(1000, 800);
         dialog.show();
 
-        ListView mLisTousrism = dialog.findViewById(R.id.listTourism);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
-                (getActivity(), android.R.layout.simple_list_item_1, mTourList);
-        mLisTousrism.setAdapter(arrayAdapter);
+        RecyclerView mLisTousrism = dialog.findViewById(R.id.listTourism);
+       // ArrayList<TourismModel> typeList= new ArrayList<>();
+        TypeTorusimAdapter typeTorusimAdapter=new TypeTorusimAdapter(getActivity(), mTourList, this);
+
+        mLisTousrism.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLisTousrism.setAdapter(typeTorusimAdapter);
+        mHomeAdapter.notifyDataSetChanged();
 
 
     }
@@ -172,12 +176,14 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                         for (DocumentSnapshot snapshot : list) {
                             TourismModel tourismModel = snapshot.toObject(TourismModel.class);
-                            getData = tourismModel.getName();
-                            mTourList.add(getData);
+                            //getName = tourismModel.getName();
+                            getId=tourismModel.getId();
+                            mTourList.add(tourismModel);
 
                         }
                     }
                 });
+
     }
 
     @Override
@@ -187,17 +193,28 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
 
     }
 
+    @Override
+    public void onClickTypeItem(String id) {
+        CivilizationFragment civilizationFragment=new CivilizationFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("typeId" ,id);
+        Log.d("idHome" , String.valueOf(id));
+        civilizationFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationFragment).commit();
+        dialog.dismiss();
+    }
 
+/*
     @Override
     public void getHomeData(ArrayList<HomeModel> homeModels) {
-       /* mList = homeModels ;
+        mList = homeModels ;
         Log.d("datFromFireBase22+", String.valueOf(mList));
         mHomeAdapter = new HomeAdapter(getActivity(), mList, this);
         mHomeRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mHomeRecycler.setAdapter(mHomeAdapter);
         mHomeAdapter.notifyDataSetChanged();
 */
-    }
+}
 
    /* private void getDataFromFirebase() {
         //get data from fireStore
@@ -208,6 +225,22 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, D
         mHomeAdapter.notifyDataSetChanged();
     }*/
 
-}
 
 
+
+
+       /* ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>
+                (getActivity(), android.R.layout.simple_list_item_1, mTourList);
+        mLisTousrism.setAdapter(arrayAdapter);
+
+        mLisTousrism.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CivilizationFragment civilizationFragment=new CivilizationFragment();
+                Bundle bundle=new Bundle();
+                bundle.putString("typeId" ,getId);
+                Log.d("idHome" , String.valueOf(id));
+                civilizationFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationFragment).commit();
+            }
+        });*/

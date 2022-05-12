@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
     //Model
     List<CivilizationModel> mList;
     CivilizationAdapter mCivilizationAdapter;
+    String mIdCiv ;
 
     //Firebase
     FirebaseFirestore mFireStore;
@@ -63,16 +65,16 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
 
 
     private void iniView(View view) {
-
         //View
         mCivilizationRecycler = view.findViewById(R.id.CivilizationHome);
         //
         mList = new ArrayList<>();
         //Firebase
         mFireStore = FirebaseFirestore.getInstance();
-
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        mIdCiv = (String) bundle.get("typeId");
     }
-
 
     private void getDataFromFirebase() {
 
@@ -82,7 +84,12 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
                         List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                         for (DocumentSnapshot snapshot : list) {
                             CivilizationModel homeModel = snapshot.toObject(CivilizationModel.class);
-                            mList.add(homeModel);
+                            String  id = (String) snapshot.get("typeId");
+                            if(mIdCiv.equalsIgnoreCase(id))
+                            {
+                                mList.add(homeModel);
+                            }
+
                         }
                         mCivilizationAdapter.notifyDataSetChanged();
                     }

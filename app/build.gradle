@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdkVersion 31
-    buildToolsVersion "30.0.1"
+    buildToolsVersion "30.0.0"
 
     defaultConfig {
         applicationId "com.kemet.kemetapp"
@@ -56,7 +56,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
 
-
     //lottie anim...
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
@@ -75,11 +74,8 @@ dependencies {
     //CanHub:Android-Image-Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
-
     //slideImage
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
-
-
 
     //navGraph
     def nav_version = "2.3.0-alpha04"

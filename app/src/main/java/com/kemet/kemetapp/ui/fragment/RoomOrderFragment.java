@@ -201,7 +201,6 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-
     private void tackPassportPhoto() {
         Toast.makeText(getActivity(), "open", Toast.LENGTH_SHORT).show();
         CropImage.activity()
@@ -241,8 +240,6 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
        });
 
     }
-
-
 
     private void selectStartDate() {
         MaterialDatePicker.Builder materialBuilder = MaterialDatePicker.Builder.datePicker();

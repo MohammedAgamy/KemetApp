@@ -29,7 +29,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.item> {
 
     Context mContext;
     List<HomeModel> mList;
-    HomeModel mHomeModel;
     HomeOnClick homeOnClick;
 
 
