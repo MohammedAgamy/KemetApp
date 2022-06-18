@@ -263,7 +263,7 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
     private void uploadData() {
 
         mName = mUserName.getText().toString();
-        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() && mImagePass != null) {
+        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() ) {
             OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality,mStatDate, mEndDate,mImagePass);
             mFirebaseFirestore.collection("UserInfoRoom").document().set(orderRoomModel)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
