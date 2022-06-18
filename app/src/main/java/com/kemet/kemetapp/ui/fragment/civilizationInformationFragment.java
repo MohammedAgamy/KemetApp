@@ -115,29 +115,26 @@ public class civilizationInformationFragment extends Fragment implements View.On
     private void getDataFromFireBase() {
         mFirestore.collection("CivilizationInformation")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshots : task.getResult()) {
-                                String id = documentSnapshots.getString("idCiv");
-                                String civName = documentSnapshots.getString("name");
-                                mAboutPaceFromFireBase = documentSnapshots.getString("aboutPlace");
-                                endLocation = documentSnapshots.getString("location");
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshots : task.getResult()) {
+                            String id = documentSnapshots.getString("idCiv");
+                            String civName = documentSnapshots.getString("name");
+                            mAboutPaceFromFireBase = documentSnapshots.getString("aboutPlace");
+                            endLocation = documentSnapshots.getString("location");
 
-                                if (mIdCiv.equalsIgnoreCase(id)) {
-                                    mCiv_Name.setText(civName);
-                                    mAboutPlace.setText(mAboutPaceFromFireBase);
-                                }
-
-                                Log.d("taskTag", documentSnapshots.getId());
+                            if (mIdCiv.equalsIgnoreCase(id)) {
+                                mCiv_Name.setText(civName);
+                                mAboutPlace.setText(mAboutPaceFromFireBase);
                             }
-                        } else {
-                            Log.d("taskTag", String.valueOf(task.getException()));
 
+                            Log.d("taskTag", documentSnapshots.getId());
                         }
+                    } else {
+                        Log.d("taskTag", String.valueOf(task.getException()));
 
                     }
+
                 });
     }
 
@@ -150,7 +147,6 @@ public class civilizationInformationFragment extends Fragment implements View.On
         locationRequest.setFastestInterval(2000);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-
             if (isGPSEnabled()) {
                 LocationServices.getFusedLocationProviderClient(getActivity())
                         .requestLocationUpdates(locationRequest, new LocationCallback() {

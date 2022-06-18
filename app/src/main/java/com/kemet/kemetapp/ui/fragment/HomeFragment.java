@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,TypeTorusimAdapter.OnClickType {
+public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, TypeTorusimAdapter.OnClickType {
 
     //view
     RecyclerView mHomeRecycler;
@@ -43,7 +43,8 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,T
     FirebaseFirestore mFireStore;
     //
     String getName, getId;
-    Dialog dialog ;
+    Dialog dialog;
+
     public HomeFragment() {
         // Required empty public constructor
 
@@ -148,14 +149,14 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,T
     private void openDialog() {
 
         //create dialog
-         dialog = new Dialog(getActivity());
+        dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_tourism);
         dialog.getWindow().setLayout(1000, 800);
         dialog.show();
 
         RecyclerView mLisTousrism = dialog.findViewById(R.id.listTourism);
-       // ArrayList<TourismModel> typeList= new ArrayList<>();
-        TypeTorusimAdapter typeTorusimAdapter=new TypeTorusimAdapter(getActivity(), mTourList, this);
+        // ArrayList<TourismModel> typeList= new ArrayList<>();
+        TypeTorusimAdapter typeTorusimAdapter = new TypeTorusimAdapter(getActivity(), mTourList, this);
 
         mLisTousrism.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLisTousrism.setAdapter(typeTorusimAdapter);
@@ -177,7 +178,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,T
                         for (DocumentSnapshot snapshot : list) {
                             TourismModel tourismModel = snapshot.toObject(TourismModel.class);
                             //getName = tourismModel.getName();
-                            getId=tourismModel.getId();
+                            getId = tourismModel.getId();
                             mTourList.add(tourismModel);
 
                         }
@@ -195,12 +196,12 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick ,T
 
     @Override
     public void onClickTypeItem(String id) {
-        CivilizationFragment civilizationFragment=new CivilizationFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("typeId" ,id);
-        Log.d("idHome" , String.valueOf(id));
+        CivilizationFragment civilizationFragment = new CivilizationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("typeId", id);
+        Log.d("idHome", String.valueOf(id));
         civilizationFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,civilizationFragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, civilizationFragment).commit();
         dialog.dismiss();
     }
 

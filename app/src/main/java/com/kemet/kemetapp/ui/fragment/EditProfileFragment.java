@@ -94,7 +94,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-
         Name = view.findViewById(R.id.Name);
         Phone = view.findViewById(R.id.Phone);
         progressBar = view.findViewById(R.id.Progress);
@@ -172,12 +171,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 if (documentSnapshot.exists()) {
                     String name = documentSnapshot.getString(KEY_Name);
                     String phone = documentSnapshot.getString(KEY_Phone);
-                    // String Nationality = documentSnapshot.getString(KEY_Nationality);
-                    //  String gender = documentSnapshot.getString(KEY_Gender);
-                    //   String day = documentSnapshot.getString(KEY_Day);
-                    //   String month = documentSnapshot.getString(KEY_Month);
-                    //   String year = documentSnapshot.getString(KEY_Year);
-
                     Name.setText(name);
                     Phone.setText(phone);
                 } else {

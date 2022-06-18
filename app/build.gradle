@@ -73,6 +73,8 @@ dependencies {
 
     //CanHub:Android-Image-Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
 
     //slideImage
     implementation 'com.github.smarteist:autoimageslider:1.4.0'

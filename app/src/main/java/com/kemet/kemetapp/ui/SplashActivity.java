@@ -30,27 +30,23 @@ public class SplashActivity extends AppCompatActivity {
         iniView();
         handlerSplash();
     }
-
     private void iniView() {
         //firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
     //methodSplash
     public void handlerSplash() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                SaveUserData saveUserData=new SaveUserData(SplashActivity.this);
-               if (currentUser != null && saveUserData.isLogin() ) {
-                    //check user is register or no
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                    finish();
-                } else {
-                    //start RegisterActivity
-                    startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
-                    finish();
-                }
+        new Handler().postDelayed(() -> {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            SaveUserData saveUserData=new SaveUserData(SplashActivity.this);
+           if (currentUser != null && saveUserData.isLogin() ) {
+                //check user is register or no
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                finish();
+            } else {
+                //start RegisterActivity
+                startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+                finish();
             }
         },3000);
     }

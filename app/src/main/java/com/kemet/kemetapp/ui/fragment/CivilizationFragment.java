@@ -77,7 +77,6 @@ public class CivilizationFragment extends Fragment implements CivilizationAdapte
     }
 
     private void getDataFromFirebase() {
-
         mFireStore.collection("CivilizationItem").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {

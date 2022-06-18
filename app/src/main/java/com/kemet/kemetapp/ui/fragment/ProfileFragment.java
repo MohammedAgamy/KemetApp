@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
     private TextView Month;
     private TextView Yaer;
 
+
     private ProgressBar progressBar;
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
