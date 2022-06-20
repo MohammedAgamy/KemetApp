@@ -33,6 +33,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, TypeTorusimAdapter.OnClickType {
 
     //view
+
     RecyclerView mHomeRecycler;
     //Model
     List<HomeModel> mList;
@@ -187,7 +188,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, T
 
     }
 
- 
+
     @Override
     public void onClickTypeItem(String id) {
         CivilizationFragment civilizationFragment = new CivilizationFragment();
