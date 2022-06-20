@@ -187,13 +187,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeOnClick, T
 
     }
 
-    @Override
-    public void onResume() {
-        //presenterHome.getData();
-        super.onResume();
-
-    }
-
+ 
     @Override
     public void onClickTypeItem(String id) {
         CivilizationFragment civilizationFragment = new CivilizationFragment();
