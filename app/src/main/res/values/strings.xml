@@ -32,6 +32,9 @@
     <string name="select_start_date">Select Start Date</string>
     <string name="select_end_date">Select End Date</string>
     <string name="tack_location">Tack Location</string>
+    <string name="payment">Payment</string>
+    <string name="cash">Cash</string>
+    <string name="online">OnLine</string>
 
 
     <string-array name="menuNationalite">

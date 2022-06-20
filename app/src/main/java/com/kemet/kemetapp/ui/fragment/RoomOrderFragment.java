@@ -226,18 +226,18 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
     }
 
     private void uPloadImage(Uri resultUri) {
-        FirebaseAuth auth=FirebaseAuth.getInstance();
-        String userID=auth.getCurrentUser().getUid();
-        StorageReference ref = storageReference.child("RoomOrder").child(userID+ ".jpg");
-       // Log.d("userId" , userID);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userID = auth.getCurrentUser().getUid();
+        StorageReference ref = storageReference.child("RoomOrder").child(userID + ".jpg");
+        // Log.d("userId" , userID);
         ref.putFile(resultUri);
 
 
-       ref.getDownloadUrl().addOnCompleteListener(task -> {
-           Uri downloadUrl=  task.getResult();
-            mImagePass =  downloadUrl.toString();
-            Log.d("mImagepass" , mImagePass);
-       });
+        ref.getDownloadUrl().addOnCompleteListener(task -> {
+            Uri downloadUrl = task.getResult();
+            mImagePass = downloadUrl.toString();
+            Log.d("mImagepass", mImagePass);
+        });
 
     }
 
@@ -263,13 +263,16 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
     private void uploadData() {
 
         mName = mUserName.getText().toString();
-        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty() ) {
-            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality,mStatDate, mEndDate,mImagePass);
+        if (!mName.isEmpty() && mNationality != null && !mStatDate.isEmpty() && !mEndDate.isEmpty()) {
+            OrderRoomModel orderRoomModel = new OrderRoomModel(mName, mNationality, mStatDate, mEndDate, mImagePass);
             mFirebaseFirestore.collection("UserInfoRoom").document().set(orderRoomModel)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
+
+                            addPayment();
+
+                       /*     if (task.isSuccessful()) {
                                 Dialog dialog = new Dialog(getActivity());
                                 dialog.setContentView(R.layout.don_item);
                                 dialog.setTitle("Order Created");
@@ -285,7 +288,7 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
                                 }, 4000);
                             } else {
                                 Toast.makeText(getActivity(), "check Your Internet", Toast.LENGTH_SHORT).show();
-                            }
+                            }*/
                         }
                     });
 
@@ -294,6 +297,11 @@ public class RoomOrderFragment extends Fragment implements View.OnClickListener 
             Toast.makeText(getActivity(), "Enter Your Data", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void addPayment() {
+        PaymentFragment paymentFragment = new PaymentFragment();
+        paymentFragment.show(getActivity().getSupportFragmentManager(), "tag");
     }
 
     private void onBack() {
